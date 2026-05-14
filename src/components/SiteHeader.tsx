@@ -1,27 +1,40 @@
-import { Menu } from "lucide-react";
+import { Menu, ChevronDown } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { artworkDropdownItems } from "@/data/artwork";
 import siteLogo from "@/assets/SmallSquareLogoJpg-removebg-preview.png";
 
 const navItems = [
-  { label: "Home", href: "#home" },
-  { label: "Artwork", href: "#artwork" },
-  { label: "Process", href: "#how-it-works" },
-  { label: "Reviews", href: "#testimonials" },
+  { label: "Home", href: "/#home" },
+  { label: "Artwork", href: "/#artwork" },
+  { label: "Process", href: "/#how-it-works" },
+  { label: "Reviews", href: "/#testimonials" },
 ];
 
 const SiteHeader = () => {
+  const location = useLocation();
+  const homeHref = location.pathname === "/" ? "#home" : "/#home";
+  const artworkHref = location.pathname === "/" ? "#artwork" : "/#artwork";
+
   return (
     <header className="fixed top-0 inset-x-0 z-50">
       <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
         <div className="glass glow-border rounded-2xl px-4 py-3 backdrop-blur-xl md:px-5">
           <div className="flex items-center justify-between gap-4">
-            <a href="#" className="flex items-center gap-3">
+            <a href={homeHref} className="flex items-center gap-3">
               <img
                 src={siteLogo}
                 alt="ARTIVISTAA logo"
@@ -39,15 +52,54 @@ const SiteHeader = () => {
             </a>
 
             <nav className="hidden md:flex items-center gap-1.5">
-              {navItems.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="interactive-surface rounded-full px-4 py-2 text-sm text-muted-foreground hover:bg-white/[0.06] hover:text-foreground"
+              {navItems
+                .filter((item) => item.label !== "Artwork")
+                .map((item) => (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className="interactive-surface rounded-full px-4 py-2 text-sm text-muted-foreground hover:bg-white/[0.06] hover:text-foreground"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    className="interactive-surface inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm text-muted-foreground hover:bg-white/[0.06] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                    aria-label="Open artwork categories"
+                  >
+                    Artwork
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="center"
+                  sideOffset={10}
+                  className="glass glow-border w-56 rounded-2xl border-white/10 bg-background/90 p-2 text-foreground backdrop-blur-xl"
                 >
-                  {item.label}
-                </a>
-              ))}
+                  <DropdownMenuItem asChild>
+                    <a
+                      href={artworkHref}
+                      className="interactive-surface rounded-xl border border-transparent px-3 py-3 text-sm text-muted-foreground hover:border-white/10 hover:bg-white/[0.06] hover:text-foreground focus:bg-white/[0.06] focus:text-foreground"
+                    >
+                      Featured Artwork
+                    </a>
+                  </DropdownMenuItem>
+                  {artworkDropdownItems.map((category) => (
+                    <DropdownMenuItem key={category.slug} asChild>
+                      <Link
+                        to={`/artwork/${category.slug}`}
+                        className="interactive-surface rounded-xl border border-transparent px-3 py-3 text-sm text-muted-foreground hover:border-white/10 hover:bg-white/[0.06] hover:text-foreground focus:bg-white/[0.06] focus:text-foreground"
+                      >
+                        {category.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </nav>
 
             <Sheet>
@@ -77,15 +129,44 @@ const SiteHeader = () => {
                   </SheetTitle>
                 </SheetHeader>
                 <div className="mt-8 flex flex-col gap-3">
-                  {navItems.map((item) => (
-                    <a
-                      key={item.label}
-                      href={item.href}
-                    className="interactive-surface rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-foreground hover:border-white/20 hover:bg-white/[0.08]"
-                    >
-                      {item.label}
-                    </a>
+                  {navItems
+                    .filter((item) => item.label !== "Artwork")
+                    .map((item) => (
+                    <SheetClose asChild key={item.label}>
+                      <a
+                        href={item.href}
+                        className="interactive-surface rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-foreground hover:border-white/20 hover:bg-white/[0.08]"
+                      >
+                        {item.label}
+                      </a>
+                    </SheetClose>
                   ))}
+
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-3">
+                    <div className="mb-3 px-1 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+                      Artwork
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <SheetClose asChild>
+                        <a
+                          href={artworkHref}
+                          className="interactive-surface rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-foreground hover:border-white/20 hover:bg-white/[0.08]"
+                        >
+                          Featured Artwork
+                        </a>
+                      </SheetClose>
+                      {artworkDropdownItems.map((category) => (
+                        <SheetClose asChild key={category.slug}>
+                          <Link
+                            to={`/artwork/${category.slug}`}
+                            className="interactive-surface rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-foreground hover:border-white/20 hover:bg-white/[0.08]"
+                          >
+                            {category.label}
+                          </Link>
+                        </SheetClose>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>

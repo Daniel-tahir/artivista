@@ -2,7 +2,10 @@ import dnd from "@/assets/card-dnd.jpg";
 import furry from "@/assets/card-furry.jpg";
 import anime from "@/assets/card-anime.jpg";
 import dragon from "@/assets/card-dragon.jpg";
+import sorceress from "@/assets/hero-sorceress.jpg";
+import heroPortrait from "@/assets/WhatsApp Image 2026-04-22 at 11.53.34 pm.jpeg";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -11,10 +14,13 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 const cards = [
-  { image: dnd, title: "Epic DnD Heroes" },
-  { image: furry, title: "Furry Art" },
-  { image: anime, title: "Anime Characters" },
-  { image: dragon, title: "Fantasy Creatures" },
+  { image: dnd, title: "Epic DnD Heroes", href: "/artwork/dnd" },
+  { image: furry, title: "Furry Art", href: "/artwork/furry" },
+  { image: anime, title: "Anime Characters", href: "/artwork/anime" },
+  { image: dragon, title: "Fantasy Creatures", href: "/artwork/fantasy" },
+  { image: sorceress, title: "Robotic", href: "/artwork/robotic" },
+  { image: heroPortrait, title: "Warhammer", href: "/artwork/warhammer" },
+  { image: dnd, title: "Group Art", href: "/artwork/group-art" },
 ];
 
 const FeaturedArtwork = () => (
@@ -65,30 +71,36 @@ const FeaturedArtwork = () => (
               key={card.title}
               className="featured-artwork-slide"
             >
-              <article
-                className="interactive-surface group overflow-hidden rounded-3xl border border-white/12 bg-white/[0.04] shadow-[0_22px_60px_-28px_rgba(15,23,42,0.95)] backdrop-blur-xl hover:-translate-y-1"
+              <Link
+                to={card.href}
+                aria-label={`Open ${card.title} artwork page`}
+                className="block"
               >
-                <div className="relative aspect-[3/4] overflow-hidden rounded-3xl">
-                  <img
-                    src={card.image}
-                    alt={card.title}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
-                  />
+                <article
+                  className="interactive-surface group overflow-hidden rounded-3xl border border-white/12 bg-white/[0.04] shadow-[0_22px_60px_-28px_rgba(15,23,42,0.95)] backdrop-blur-xl hover:-translate-y-1"
+                >
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-3xl">
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                    />
 
-                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(6,10,24,0.08)_0%,rgba(6,10,24,0.28)_45%,rgba(3,6,18,0.88)_100%)]" />
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(6,10,24,0.08)_0%,rgba(6,10,24,0.28)_45%,rgba(3,6,18,0.88)_100%)]" />
 
-                  <div className="absolute inset-x-6 bottom-6 text-center md:inset-x-8 md:bottom-8">
-                    <p className="mb-3 text-[10px] uppercase tracking-[0.42em] text-white/68 md:text-[11px]">
-                      Featured
-                    </p>
+                    <div className="absolute inset-x-6 bottom-6 text-center md:inset-x-8 md:bottom-8">
+                      <p className="mb-3 text-[10px] uppercase tracking-[0.42em] text-white/68 md:text-[11px]">
+                        Featured
+                      </p>
 
-                    <h3 className="font-display text-xl font-semibold tracking-[-0.03em] text-white drop-shadow-[0_10px_35px_rgba(0,0,0,0.35)] md:text-[1.7rem]">
-                      {card.title}
-                    </h3>
+                      <h3 className="font-display text-xl font-semibold tracking-[-0.03em] text-white drop-shadow-[0_10px_35px_rgba(0,0,0,0.35)] md:text-[1.7rem]">
+                        {card.title}
+                      </h3>
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
+              </Link>
             </SwiperSlide>
           ))}
         </Swiper>
