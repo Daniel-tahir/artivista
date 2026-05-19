@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { Quote, ShieldCheck, Star } from "lucide-react";
-import heroSorceress from "@/assets/hero-sorceress.jpg";
-import cardDragon from "@/assets/card-dragon.jpg";
+import { artworkManifests } from "@/data/artwork";
+import { siteAssets } from "@/lib/site-assets";
+
+const fantasyArtwork = artworkManifests.fantasy.items[0]?.image ?? siteAssets.hero.sorceress;
 
 const transmissions = [
   {
     name: "Elena R.",
     role: "Client",
     side: "left",
-    avatar: heroSorceress,
+    avatar: siteAssets.hero.sorceress,
     message:
       "Hi! I need a cinematic portrait for our game launch. I want it to feel regal, dangerous, and unmistakably ours.",
     stamp: "20:14",
@@ -17,7 +19,7 @@ const transmissions = [
     name: "ARTIVISTAA",
     role: "Artist",
     side: "right",
-    avatar: cardDragon,
+    avatar: fantasyArtwork,
     message:
       "Transmission received. I can build that mood with a moonlit palette, ceremonial armor details, and a sharper focal glow around the eyes.",
     stamp: "20:16",
@@ -26,7 +28,7 @@ const transmissions = [
     name: "Elena R.",
     role: "Client",
     side: "left",
-    avatar: heroSorceress,
+    avatar: siteAssets.hero.sorceress,
     message:
       "That sounds perfect. We also need it polished enough for the landing page and social teasers without losing the fantasy soul.",
     stamp: "20:18",
@@ -35,7 +37,7 @@ const transmissions = [
     name: "ARTIVISTAA",
     role: "Artist",
     side: "right",
-    avatar: cardDragon,
+    avatar: fantasyArtwork,
     message:
       "Understood. I'll deliver a hero-grade composition with marketing-ready framing, plus enough atmosphere to feel like a living world.",
     stamp: "20:20",
@@ -44,7 +46,7 @@ const transmissions = [
     name: "Elena R.",
     role: "Client",
     side: "left",
-    avatar: heroSorceress,
+    avatar: siteAssets.hero.sorceress,
     message:
       "You absolutely nailed it. The final piece felt like it came from our own lore bible, only better.",
     stamp: "20:27",
@@ -54,7 +56,7 @@ const transmissions = [
 const featuredTestimonial = {
   name: "ELENA R.",
   role: "Creative Director, Astral Forge",
-  avatar: heroSorceress,
+  avatar: siteAssets.hero.sorceress,
   quote:
     "Working with ARTIVISTAA was the best decision we made for our launch. The artwork felt handcrafted for our world, elevated our brand instantly, and gave our audience something they could believe in.",
 };
@@ -156,8 +158,11 @@ const Testimonials = () => {
                             <img
                               src={item.avatar}
                               alt={item.name}
+                              width={isClient ? 1920 : 768}
+                              height={isClient ? 1080 : 1024}
                               className="h-full w-full object-cover"
                               loading="lazy"
+                              decoding="async"
                             />
                           </div>
 
@@ -190,10 +195,13 @@ const Testimonials = () => {
                     <div className="flex items-end gap-3">
                       <div className="h-12 w-12 overflow-hidden rounded-full border border-cyan-300/35 shadow-[0_0_22px_rgba(34,211,238,0.2)]">
                         <img
-                          src={cardDragon}
+                          src={fantasyArtwork}
                           alt="ARTIVISTAA"
+                          width={768}
+                          height={1024}
                           className="h-full w-full object-cover"
                           loading="lazy"
+                          decoding="async"
                         />
                       </div>
                       <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-slate-950/60 px-4 py-3 text-xs uppercase tracking-[0.28em] text-cyan-100/80">
@@ -223,8 +231,11 @@ const Testimonials = () => {
                       <img
                         src={featuredTestimonial.avatar}
                         alt={featuredTestimonial.name}
+                        width={1920}
+                        height={1080}
                         className="h-full w-full object-cover"
                         loading="lazy"
+                        decoding="async"
                       />
                     </div>
 

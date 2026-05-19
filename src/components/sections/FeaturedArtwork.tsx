@@ -1,30 +1,18 @@
-import dnd from "@/assets/card-dnd.jpg";
-import furry from "@/assets/card-furry.jpg";
-import anime from "@/assets/card-anime.jpg";
-import dragon from "@/assets/card-dragon.jpg";
-import sorceress from "@/assets/hero-sorceress.jpg";
-import heroPortrait from "@/assets/WhatsApp Image 2026-04-22 at 11.53.34 pm.jpeg";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  artworkCategories,
+} from "@/data/artwork";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-const cards = [
-  { image: dnd, title: "Epic DnD Heroes", href: "/artwork/dnd" },
-  { image: furry, title: "Furry Art", href: "/artwork/furry" },
-  { image: anime, title: "Anime Characters", href: "/artwork/anime" },
-  { image: dragon, title: "Fantasy Creatures", href: "/artwork/fantasy" },
-  { image: sorceress, title: "Robotic", href: "/artwork/robotic" },
-  { image: heroPortrait, title: "Warhammer", href: "/artwork/warhammer" },
-  { image: dnd, title: "Group Art", href: "/artwork/group-art" },
-];
-
-const FeaturedArtwork = () => (
-  <section id="artwork" className="section-shell-lg relative">
+const FeaturedArtwork = () => {
+  return (
+    <section id="artwork" className="section-shell-lg relative">
     <div className="container relative z-10">
       <div className="mb-14 text-center md:mb-16">
         <p className="eyebrow mb-4 text-primary">Portfolio</p>
@@ -41,7 +29,7 @@ const FeaturedArtwork = () => (
 
         <Swiper
           modules={[Autoplay, Navigation, Pagination]}
-          loop={cards.length > 3}
+          loop={artworkCategories.length > 3}
           slidesPerView={1}
           spaceBetween={12}
           autoplay={{
@@ -64,16 +52,19 @@ const FeaturedArtwork = () => (
               centeredSlides: false,
             },
           }}
+          watchOverflow
+          preloadImages={false}
+          lazyPreloadPrevNext={1}
           className="featured-artwork-swiper"
         >
-          {cards.map((card) => (
+          {artworkCategories.map((card) => (
             <SwiperSlide
-              key={card.title}
+              key={card.slug}
               className="featured-artwork-slide"
             >
               <Link
-                to={card.href}
-                aria-label={`Open ${card.title} artwork page`}
+                to={`/artwork/${card.slug}`}
+                aria-label={`Open ${card.featuredTitle} artwork page`}
                 className="block"
               >
                 <article
@@ -81,9 +72,12 @@ const FeaturedArtwork = () => (
                 >
                   <div className="relative aspect-[3/4] overflow-hidden rounded-3xl">
                     <img
-                      src={card.image}
-                      alt={card.title}
+                      src={card.featuredImage}
+                      alt={card.featuredTitle}
                       loading="lazy"
+                      decoding="async"
+                      width={768}
+                      height={1024}
                       className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
                     />
 
@@ -95,7 +89,7 @@ const FeaturedArtwork = () => (
                       </p>
 
                       <h3 className="font-display text-xl font-semibold tracking-[-0.03em] text-white drop-shadow-[0_10px_35px_rgba(0,0,0,0.35)] md:text-[1.7rem]">
-                        {card.title}
+                        {card.featuredTitle}
                       </h3>
                     </div>
                   </div>
@@ -180,6 +174,7 @@ const FeaturedArtwork = () => (
       }
     `}</style>
   </section>
-);
+  );
+};
 
 export default FeaturedArtwork;

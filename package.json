@@ -4,6 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "artwork:sync": "node ./scripts/sync-artwork-manifests.mjs",
+    "predev": "npm run artwork:sync",
+    "prebuild": "npm run artwork:sync",
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",

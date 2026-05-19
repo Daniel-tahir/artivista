@@ -1,11 +1,11 @@
 import MagicButton from "../MagicButton";
 import WhatsAppIcon from "../WhatsAppIcon";
-import cosmic from "@/assets/cta-cosmic.jpg";
+import { siteAssets } from "@/lib/site-assets";
 
 const MidCTA = () => (
   <section className="section-shell-lg relative overflow-hidden">
     <div className="absolute inset-0">
-      <img src={cosmic} alt="Cosmic landscape" loading="lazy" width={1920} height={1080} className="h-full w-full object-cover" />
+      <img src={siteAssets.misc.ctaCosmic} alt="Cosmic landscape" loading="lazy" decoding="async" width={1920} height={1080} className="h-full w-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background/40 to-background" />
     </div>
 

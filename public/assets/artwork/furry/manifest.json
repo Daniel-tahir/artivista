@@ -1,0 +1,29 @@
+{
+  "slug": "furry",
+  "items": [
+    {
+      "title": "Dragonborn Bust Short",
+      "image": "/assets/artwork/furry/Dragonborn-bust-short.webp"
+    },
+    {
+      "title": "Dragonborne Couple",
+      "image": "/assets/artwork/furry/Dragonborne-couple.webp"
+    },
+    {
+      "title": "Fighter Wolf",
+      "image": "/assets/artwork/furry/fighter-wolf.webp"
+    },
+    {
+      "title": "Vulpin",
+      "image": "/assets/artwork/furry/Vulpin.png"
+    },
+    {
+      "title": "Wolf & Witch HUnter",
+      "image": "/assets/artwork/furry/Wolf-&-Witch-HUnter.webp"
+    },
+    {
+      "title": "Wolf",
+      "image": "/assets/artwork/furry/wolf.webp"
+    }
+  ]
+}

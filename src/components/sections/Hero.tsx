@@ -1,6 +1,6 @@
 import MagicButton from "../MagicButton";
 import WhatsAppIcon from "../WhatsAppIcon";
-import heroImg from "@/assets/WhatsApp Image 2026-04-22 at 11.53.34 pm.jpeg";
+import { siteAssets } from "@/lib/site-assets";
 
 const Hero = () => {
   return (
@@ -11,10 +11,12 @@ const Hero = () => {
       {/* Background image */}
       <div className="absolute inset-0">
         <img
-          src={heroImg}
+          src={siteAssets.hero.portrait}
           alt="Mystical sorceress with cosmic dragon"
-          width={1920}
-          height={1080}
+          width={1600}
+          height={1131}
+          fetchPriority="high"
+          decoding="async"
           className="h-full w-full object-cover animate-float-slow"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />

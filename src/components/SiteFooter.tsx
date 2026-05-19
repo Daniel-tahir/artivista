@@ -1,6 +1,6 @@
 import { Instagram, X } from "lucide-react";
 import WhatsAppIcon from "./WhatsAppIcon";
-import xLogo from "@/assets/x-logo.png";
+import { siteAssets } from "@/lib/site-assets";
 
 const ArtStationIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" className={className}>
@@ -33,7 +33,7 @@ const socialLinks = [
     href: "https://x.com/Artivistaa",
     Icon: X,
     iconWrapClass: "overflow-hidden bg-black shadow-[0_0_22px_rgba(255,255,255,0.16)]",
-    imageSrc: xLogo,
+    imageSrc: siteAssets.icons.xLogo,
   },
   {
     label: "WhatsApp",
@@ -85,6 +85,9 @@ const SiteFooter = () => {
                         <img
                           src={imageSrc}
                           alt={`${label} logo`}
+                          loading="lazy"
+                          width={2048}
+                          height={2048}
                           className="h-full w-full object-cover"
                         />
                       ) : (

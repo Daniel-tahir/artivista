@@ -1,0 +1,72 @@
+[
+  {
+    "slug": "dnd",
+    "label": "DND",
+    "name": "DND",
+    "eyebrow": "Adventure Party Collection",
+    "subtitle": "A dedicated DND gallery presented with the site’s current fantasy atmosphere, layout rhythm, and responsive behavior.",
+    "heroImage": "/assets/artwork/dnd/arcane-duelist.webp",
+    "featuredTitle": "Epic DnD Heroes",
+    "featuredImage": "/assets/artwork/dnd/arcane-duelist.webp"
+  },
+  {
+    "slug": "furry",
+    "label": "Furry",
+    "name": "Furry",
+    "eyebrow": "Character Personality Collection",
+    "subtitle": "A furry artwork gallery that inherits the current website theme, colors, spacing, and interaction language.",
+    "heroImage": "/assets/artwork/furry/neon-pathfinder.webp",
+    "featuredTitle": "Furry Art",
+    "featuredImage": "/assets/artwork/furry/neon-pathfinder.webp"
+  },
+  {
+    "slug": "anime",
+    "label": "Anime",
+    "name": "Anime",
+    "eyebrow": "Stylized Character Collection",
+    "subtitle": "A focused anime category page using the same visual system and responsive structure already established on the site.",
+    "heroImage": "/assets/artwork/anime/skyline-prodigy.webp",
+    "featuredTitle": "Anime Characters",
+    "featuredImage": "/assets/artwork/anime/skyline-prodigy.webp"
+  },
+  {
+    "slug": "fantasy",
+    "label": "Fantasy",
+    "name": "Fantasy",
+    "eyebrow": "Mythic Worldbuilding Collection",
+    "subtitle": "A fantasy artwork gallery for creatures and characters, kept within the current website’s theme and responsive system.",
+    "heroImage": "/assets/artwork/fantasy/ember-drake.webp",
+    "featuredTitle": "Fantasy Creatures",
+    "featuredImage": "/assets/artwork/fantasy/ember-drake.webp"
+  },
+  {
+    "slug": "robotic",
+    "label": "Robotic",
+    "name": "Robotic",
+    "eyebrow": "Synthetic Character Collection",
+    "subtitle": "A curated robotic-themed artwork page that preserves the site’s existing aesthetic, structure, and responsiveness.",
+    "heroImage": "/assets/artwork/robotic/chrome-sentinel.webp",
+    "featuredTitle": "Robotic",
+    "featuredImage": "/assets/artwork/robotic/chrome-sentinel.webp"
+  },
+  {
+    "slug": "warhammer",
+    "label": "Warhammer",
+    "name": "Warhammer",
+    "eyebrow": "Battle-Ready Character Collection",
+    "subtitle": "A Warhammer category page designed to stay visually consistent with the current website without altering the existing design.",
+    "heroImage": "/assets/artwork/warhammer/iron-vanguard.webp",
+    "featuredTitle": "Warhammer",
+    "featuredImage": "/assets/artwork/warhammer/iron-vanguard.webp"
+  },
+  {
+    "slug": "group-art",
+    "label": "Group Art",
+    "name": "Group Art",
+    "eyebrow": "Ensemble Artwork Collection",
+    "subtitle": "A group-art gallery for multi-character scenes, built to match the current UI system and responsive grid behavior.",
+    "heroImage": "/assets/artwork/group-art/guild-assembly.webp",
+    "featuredTitle": "Group Art",
+    "featuredImage": "/assets/artwork/group-art/guild-assembly.webp"
+  }
+]

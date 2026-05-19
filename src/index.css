@@ -230,6 +230,40 @@
     animation: scanlines 12s linear infinite;
   }
 
+  .site-header-shell {
+    border: 1px solid transparent;
+    will-change: transform, background-color, box-shadow;
+  }
+
+  .site-header-shell-top {
+    background: transparent;
+    backdrop-filter: blur(0);
+    -webkit-backdrop-filter: blur(0);
+    box-shadow: none;
+    transform: translateY(0) scale(1);
+  }
+
+  .site-header-shell-top::before {
+    opacity: 0;
+  }
+
+  .site-header-shell-scrolled {
+    background: rgb(15 15 15 / 0.45);
+    border-color: rgb(255 255 255 / 0.08);
+    backdrop-filter: blur(16px) saturate(118%);
+    -webkit-backdrop-filter: blur(16px) saturate(118%);
+    box-shadow:
+      0 18px 38px -28px rgb(5 8 20 / 0.58),
+      inset 0 1px 0 rgb(255 255 255 / 0.05);
+    transform: translateY(0) scale(0.985);
+  }
+
+  .mobile-menu-sheet {
+    background: rgb(10 8 20 / 0.94);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
   .typing-dots span {
     width: 5px;
     height: 5px;
@@ -252,6 +286,23 @@
 @layer utilities {
   .balance-text {
     text-wrap: balance;
+  }
+  .mobile-nav-scroll {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  .mobile-nav-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .group-art-card-media {
+    aspect-ratio: 1.7 / 1;
+  }
+  .group-art-card-image {
+    object-fit: contain;
+    object-position: center;
+    background: rgb(8 7 18 / 0.78);
   }
   .animate-float {
     animation: float 6s ease-in-out infinite;
@@ -335,5 +386,22 @@
   }
   to {
     transform: translateY(8px);
+  }
+}
+
+@media (max-width: 767px) {
+  .site-header-shell-scrolled {
+    backdrop-filter: blur(10px) saturate(112%);
+    -webkit-backdrop-filter: blur(10px) saturate(112%);
+    box-shadow: 0 14px 28px -24px rgb(5 8 20 / 0.5);
+    transform: translateY(0) scale(0.992);
+  }
+
+  .group-art-card-media {
+    aspect-ratio: 1.85 / 1;
+  }
+
+  .group-art-card-image {
+    object-position: center;
   }
 }

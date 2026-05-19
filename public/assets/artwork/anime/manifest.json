@@ -1,0 +1,41 @@
+{
+  "slug": "anime",
+  "items": [
+    {
+      "title": "Manga Riging",
+      "image": "/assets/artwork/anime/Manga-riging.webp"
+    },
+    {
+      "title": "Manga",
+      "image": "/assets/artwork/anime/Manga.webp"
+    },
+    {
+      "title": "Morgandy DeDannon (1)",
+      "image": "/assets/artwork/anime/Morgandy-DeDannon-(1).webp"
+    },
+    {
+      "title": "Poppy Willowbrook",
+      "image": "/assets/artwork/anime/Poppy-Willowbrook.webp"
+    },
+    {
+      "title": "Rider",
+      "image": "/assets/artwork/anime/rider.webp"
+    },
+    {
+      "title": "Salem",
+      "image": "/assets/artwork/anime/salem.webp"
+    },
+    {
+      "title": "Soft Girl",
+      "image": "/assets/artwork/anime/soft-girl.webp"
+    },
+    {
+      "title": "Steel &Spellfire",
+      "image": "/assets/artwork/anime/steel-&spellfire.webp"
+    },
+    {
+      "title": "The Pale Tail",
+      "image": "/assets/artwork/anime/The-Pale-Tail.webp"
+    }
+  ]
+}

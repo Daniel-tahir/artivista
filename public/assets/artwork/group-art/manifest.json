@@ -1,0 +1,21 @@
+{
+  "slug": "group-art",
+  "items": [
+    {
+      "title": "Elf Couple",
+      "image": "/assets/artwork/group-art/elf-couple.png"
+    },
+    {
+      "title": "Group Charecter 2",
+      "image": "/assets/artwork/group-art/group-charecter-2.webp"
+    },
+    {
+      "title": "Monitor Lizard",
+      "image": "/assets/artwork/group-art/Monitor-Lizard.png"
+    },
+    {
+      "title": "Sci Fi Colonna Family2",
+      "image": "/assets/artwork/group-art/Sci-Fi-Colonna-Family2.png"
+    }
+  ]
+}

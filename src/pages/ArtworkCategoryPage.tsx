@@ -1,11 +1,40 @@
+import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import ArtworkCard from "@/components/ArtworkCard";
+import ArtworkLightbox from "@/components/ArtworkLightbox";
+import MagicButton from "@/components/MagicButton";
 import SiteLayout from "@/components/layout/SiteLayout";
-import { artworkCategoryPageMap } from "@/data/artwork";
+import {
+  artworkCategories,
+  artworkManifests,
+  type ArtworkCategorySlug,
+} from "@/data/artwork";
+
+const ITEMS_PER_PAGE = 10;
 
 const ArtworkCategoryPage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const category = slug ? artworkCategoryPageMap.get(slug) : undefined;
+  const categorySlug = slug as ArtworkCategorySlug | undefined;
+  const [activeArtworkIndex, setActiveArtworkIndex] = useState<number | null>(null);
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+  const category = categorySlug
+    ? artworkCategories.find((entry) => entry.slug === categorySlug)
+    : undefined;
+  const isGroupArt = category?.slug === "group-art";
+  const manifest = categorySlug ? artworkManifests[categorySlug] : undefined;
+  const visibleItems = manifest?.items.slice(0, visibleCount) ?? [];
+  const hasMoreItems = (manifest?.items.length ?? 0) > visibleCount;
+
+  const activeArtwork = useMemo(
+    () =>
+      activeArtworkIndex !== null ? manifest?.items[activeArtworkIndex] : undefined,
+    [activeArtworkIndex, manifest?.items],
+  );
+
+  useEffect(() => {
+    setVisibleCount(ITEMS_PER_PAGE);
+    setActiveArtworkIndex(null);
+  }, [categorySlug]);
 
   if (!category) {
     return <Navigate to="/not-found" replace />;
@@ -18,6 +47,9 @@ const ArtworkCategoryPage = () => {
           <img
             src={category.heroImage}
             alt={category.name}
+            width={768}
+            height={1024}
+            decoding="async"
             className="h-full w-full object-cover opacity-20"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/82 to-background" />
@@ -64,18 +96,51 @@ const ArtworkCategoryPage = () => {
             </h2>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-            {category.items.map((item, index) => (
+          <div
+            className={`grid gap-4 ${
+              isGroupArt ? "grid-cols-1 md:grid-cols-2" : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+            }`}
+          >
+            {visibleItems.map((item, index) => (
               <ArtworkCard
-                key={item.title}
+                key={`${item.image}-${index}`}
                 image={item.image}
                 title={item.title}
                 delay={index * 80}
+                mediaClassName={isGroupArt ? "group-art-card-media" : undefined}
+                imageClassName={isGroupArt ? "group-art-card-image" : undefined}
+                onClick={() => setActiveArtworkIndex(index)}
               />
             ))}
           </div>
+
+          {hasMoreItems ? (
+            <div className="mt-10 flex justify-center">
+              <MagicButton
+                variant="ghost"
+                onClick={() =>
+                  setVisibleCount((current) => current + ITEMS_PER_PAGE)
+                }
+              >
+                Load More
+              </MagicButton>
+            </div>
+          ) : null}
         </div>
       </section>
+
+      {activeArtwork ? (
+        <ArtworkLightbox
+          open={activeArtworkIndex !== null}
+          onOpenChange={(open) => {
+            if (!open) {
+              setActiveArtworkIndex(null);
+            }
+          }}
+          title={activeArtwork.title}
+          image={activeArtwork.image}
+        />
+      ) : null}
     </SiteLayout>
   );
 };

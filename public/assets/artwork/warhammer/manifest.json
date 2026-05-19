@@ -1,0 +1,29 @@
+{
+  "slug": "warhammer",
+  "items": [
+    {
+      "title": "Blood Angels Miniature",
+      "image": "/assets/artwork/warhammer/blood-angels-miniature.webp"
+    },
+    {
+      "title": "Chemist",
+      "image": "/assets/artwork/warhammer/Chemist.webp"
+    },
+    {
+      "title": "Falling Armor Bg",
+      "image": "/assets/artwork/warhammer/falling-armor-bg.png"
+    },
+    {
+      "title": "Head Shot",
+      "image": "/assets/artwork/warhammer/Head-Shot.webp"
+    },
+    {
+      "title": "Robot",
+      "image": "/assets/artwork/warhammer/Robot.webp"
+    },
+    {
+      "title": "Warrior",
+      "image": "/assets/artwork/warhammer/Warrior.webp"
+    }
+  ]
+}

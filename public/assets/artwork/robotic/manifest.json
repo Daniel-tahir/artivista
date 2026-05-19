@@ -1,0 +1,21 @@
+{
+  "slug": "robotic",
+  "items": [
+    {
+      "title": "Aether Machine",
+      "image": "/assets/artwork/robotic/aether-machine.webp"
+    },
+    {
+      "title": "Chrome Sentinel",
+      "image": "/assets/artwork/robotic/chrome-sentinel.webp"
+    },
+    {
+      "title": "Neon Gearframe",
+      "image": "/assets/artwork/robotic/neon-gearframe.webp"
+    },
+    {
+      "title": "Titan Relay",
+      "image": "/assets/artwork/robotic/titan-relay.webp"
+    }
+  ]
+}
