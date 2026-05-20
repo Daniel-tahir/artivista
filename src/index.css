@@ -296,14 +296,6 @@
   .mobile-nav-scroll::-webkit-scrollbar {
     display: none;
   }
-  .group-art-card-media {
-    aspect-ratio: 1.7 / 1;
-  }
-  .group-art-card-image {
-    object-fit: contain;
-    object-position: center;
-    background: rgb(8 7 18 / 0.78);
-  }
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
@@ -397,11 +389,4 @@
     transform: translateY(0) scale(0.992);
   }
 
-  .group-art-card-media {
-    aspect-ratio: 1.85 / 1;
-  }
-
-  .group-art-card-image {
-    object-position: center;
-  }
 }

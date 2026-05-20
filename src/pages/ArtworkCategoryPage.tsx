@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import ArtworkCard from "@/components/ArtworkCard";
+import ArtworkGalleryGrid from "@/components/ArtworkGalleryGrid";
 import ArtworkLightbox from "@/components/ArtworkLightbox";
 import MagicButton from "@/components/MagicButton";
 import SiteLayout from "@/components/layout/SiteLayout";
@@ -30,6 +30,34 @@ const ArtworkCategoryPage = () => {
       activeArtworkIndex !== null ? manifest?.items[activeArtworkIndex] : undefined,
     [activeArtworkIndex, manifest?.items],
   );
+
+  const openArtworkAt = (index: number) => {
+    setActiveArtworkIndex(index);
+  };
+
+  const closeLightbox = (open: boolean) => {
+    if (!open) {
+      setActiveArtworkIndex(null);
+    }
+  };
+
+  const showPreviousArtwork = () => {
+    if (!manifest?.items.length || activeArtworkIndex === null) {
+      return;
+    }
+
+    setActiveArtworkIndex(
+      (activeArtworkIndex - 1 + manifest.items.length) % manifest.items.length,
+    );
+  };
+
+  const showNextArtwork = () => {
+    if (!manifest?.items.length || activeArtworkIndex === null) {
+      return;
+    }
+
+    setActiveArtworkIndex((activeArtworkIndex + 1) % manifest.items.length);
+  };
 
   useEffect(() => {
     setVisibleCount(ITEMS_PER_PAGE);
@@ -96,23 +124,11 @@ const ArtworkCategoryPage = () => {
             </h2>
           </div>
 
-          <div
-            className={`grid gap-4 ${
-              isGroupArt ? "grid-cols-1 md:grid-cols-2" : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
-            }`}
-          >
-            {visibleItems.map((item, index) => (
-              <ArtworkCard
-                key={`${item.image}-${index}`}
-                image={item.image}
-                title={item.title}
-                delay={index * 80}
-                mediaClassName={isGroupArt ? "group-art-card-media" : undefined}
-                imageClassName={isGroupArt ? "group-art-card-image" : undefined}
-                onClick={() => setActiveArtworkIndex(index)}
-              />
-            ))}
-          </div>
+          <ArtworkGalleryGrid
+            items={visibleItems}
+            onSelect={openArtworkAt}
+            isGroupArt={isGroupArt}
+          />
 
           {hasMoreItems ? (
             <div className="mt-10 flex justify-center">
@@ -132,13 +148,11 @@ const ArtworkCategoryPage = () => {
       {activeArtwork ? (
         <ArtworkLightbox
           open={activeArtworkIndex !== null}
-          onOpenChange={(open) => {
-            if (!open) {
-              setActiveArtworkIndex(null);
-            }
-          }}
-          title={activeArtwork.title}
-          image={activeArtwork.image}
+          onOpenChange={closeLightbox}
+          items={manifest?.items ?? []}
+          activeIndex={activeArtworkIndex ?? 0}
+          onPrevious={showPreviousArtwork}
+          onNext={showNextArtwork}
         />
       ) : null}
     </SiteLayout>
