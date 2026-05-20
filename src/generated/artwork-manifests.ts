@@ -15,7 +15,7 @@ export const generatedArtworkCategories = [
     "name": "DND",
     "eyebrow": "Adventure Party Collection",
     "subtitle": "A dedicated DND gallery presented with the site’s current fantasy atmosphere, layout rhythm, and responsive behavior.",
-    "heroImage": "/assets/artwork/dnd/2-character-male-and-female.webp",
+    "heroImage": "/assets/artwork/dnd/1f1f0f41-4c97-49b8-bf0d-203ba4588c09 2.webp",
     "featuredTitle": "Epic DnD Heroes",
     "featuredImage": "/assets/featured/dnd/featured.webp"
   },
@@ -35,29 +35,9 @@ export const generatedArtworkCategories = [
     "name": "Anime",
     "eyebrow": "Stylized Character Collection",
     "subtitle": "A focused anime category page using the same visual system and responsive structure already established on the site.",
-    "heroImage": "/assets/artwork/anime/Manga-riging.webp",
+    "heroImage": "/assets/artwork/anime/503806375_3006250609533451_2743823112020178685_n.webp",
     "featuredTitle": "Anime Characters",
     "featuredImage": "/assets/featured/anime/featured.webp"
-  },
-  {
-    "slug": "fantasy",
-    "label": "Fantasy",
-    "name": "Fantasy",
-    "eyebrow": "Mythic Worldbuilding Collection",
-    "subtitle": "A fantasy artwork gallery for creatures and characters, kept within the current website’s theme and responsive system.",
-    "heroImage": "/assets/artwork/fantasy/ember-drake.webp",
-    "featuredTitle": "Fantasy Creatures",
-    "featuredImage": "/assets/featured/fantasy/featured.webp"
-  },
-  {
-    "slug": "robotic",
-    "label": "Robotic",
-    "name": "Robotic",
-    "eyebrow": "Synthetic Character Collection",
-    "subtitle": "A curated robotic-themed artwork page that preserves the site’s existing aesthetic, structure, and responsiveness.",
-    "heroImage": "/assets/artwork/robotic/aether-machine.webp",
-    "featuredTitle": "Robotic",
-    "featuredImage": "/assets/featured/robotic/featured.webp"
   },
   {
     "slug": "warhammer",
@@ -65,7 +45,7 @@ export const generatedArtworkCategories = [
     "name": "Warhammer",
     "eyebrow": "Battle-Ready Character Collection",
     "subtitle": "A Warhammer category page designed to stay visually consistent with the current website without altering the existing design.",
-    "heroImage": "/assets/artwork/warhammer/blood-angels-miniature.webp",
+    "heroImage": "/assets/artwork/warhammer/03b1a875-2c22-48c0-a558-c4402eba582a.webp",
     "featuredTitle": "Warhammer",
     "featuredImage": "/assets/featured/warhammer/featured.webp"
   },
@@ -75,7 +55,7 @@ export const generatedArtworkCategories = [
     "name": "Group Art",
     "eyebrow": "Ensemble Artwork Collection",
     "subtitle": "A group-art gallery for multi-character scenes, built to match the current UI system and responsive grid behavior.",
-    "heroImage": "/assets/artwork/group-art/elf-couple.png",
+    "heroImage": "/assets/artwork/group-art/2 character with bg final (2).webp",
     "featuredTitle": "Group Art",
     "featuredImage": "/assets/featured/group-art/featured.webp"
   }
@@ -86,8 +66,16 @@ export const generatedArtworkManifests = {
     "slug": "dnd",
     "items": [
       {
+        "title": "1f1f0f41 4c97 49b8 Bf0d 203ba4588c09 2",
+        "image": "/assets/artwork/dnd/1f1f0f41-4c97-49b8-bf0d-203ba4588c09 2.webp"
+      },
+      {
         "title": "2 Character Male And Female",
         "image": "/assets/artwork/dnd/2-character-male-and-female.webp"
+      },
+      {
+        "title": "59b0bd48 6ff7 4eed A45a D6233097618a",
+        "image": "/assets/artwork/dnd/59b0bd48-6ff7-4eed-a45a-d6233097618a.webp"
       },
       {
         "title": "A3",
@@ -131,10 +119,6 @@ export const generatedArtworkManifests = {
       },
       {
         "title": "Charlie",
-        "image": "/assets/artwork/dnd/Charlie.png"
-      },
-      {
-        "title": "Charlie",
         "image": "/assets/artwork/dnd/Charlie.webp"
       },
       {
@@ -163,7 +147,7 @@ export const generatedArtworkManifests = {
       },
       {
         "title": "Durin",
-        "image": "/assets/artwork/dnd/Durin.png"
+        "image": "/assets/artwork/dnd/Durin.webp"
       },
       {
         "title": "Elf With Jester Mask",
@@ -186,16 +170,24 @@ export const generatedArtworkManifests = {
         "image": "/assets/artwork/dnd/Fairy.webp"
       },
       {
+        "title": "Fallout Final",
+        "image": "/assets/artwork/dnd/fallout final.webp"
+      },
+      {
+        "title": "Fat Guy",
+        "image": "/assets/artwork/dnd/fat guy.webp"
+      },
+      {
         "title": "Fire Man",
         "image": "/assets/artwork/dnd/fire-man.webp"
       },
       {
-        "title": "Gamer",
-        "image": "/assets/artwork/dnd/Gamer.png"
-      },
-      {
         "title": "Girl With Gear System",
         "image": "/assets/artwork/dnd/Girl-with-gear-system.webp"
+      },
+      {
+        "title": "GMDZDXFWMAA5kJZ",
+        "image": "/assets/artwork/dnd/GMDZDXFWMAA5kJZ.webp"
       },
       {
         "title": "Goblin",
@@ -204,6 +196,10 @@ export const generatedArtworkManifests = {
       {
         "title": "Hacker",
         "image": "/assets/artwork/dnd/Hacker.webp"
+      },
+      {
+        "title": "Half Body Hood Guy",
+        "image": "/assets/artwork/dnd/half body hood guy.webp"
       },
       {
         "title": "Half Orc Character",
@@ -216,6 +212,22 @@ export const generatedArtworkManifests = {
       {
         "title": "Horned",
         "image": "/assets/artwork/dnd/Horned.webp"
+      },
+      {
+        "title": "IMG 1216 2",
+        "image": "/assets/artwork/dnd/IMG_1216 2.webp"
+      },
+      {
+        "title": "IMG 5197",
+        "image": "/assets/artwork/dnd/IMG_5197.webp"
+      },
+      {
+        "title": "IMG 6641",
+        "image": "/assets/artwork/dnd/IMG_6641.webp"
+      },
+      {
+        "title": "IMG 9649",
+        "image": "/assets/artwork/dnd/IMG_9649.webp"
       },
       {
         "title": "Keon Ekker",
@@ -250,6 +262,10 @@ export const generatedArtworkManifests = {
         "image": "/assets/artwork/dnd/owl's-charecter-librarian.webp"
       },
       {
+        "title": "Paladin Bg",
+        "image": "/assets/artwork/dnd/paladin bg.webp"
+      },
+      {
         "title": "Pirate And Professor",
         "image": "/assets/artwork/dnd/Pirate-and-professor.webp"
       },
@@ -270,6 +286,14 @@ export const generatedArtworkManifests = {
         "image": "/assets/artwork/dnd/Rich-Dude.webp"
       },
       {
+        "title": "Scarecrooow Bg",
+        "image": "/assets/artwork/dnd/scarecrooow bg.webp"
+      },
+      {
+        "title": "Scavenger Boy Bg",
+        "image": "/assets/artwork/dnd/scavenger boy bg.webp"
+      },
+      {
         "title": "Slave And Dragon",
         "image": "/assets/artwork/dnd/Slave-and-Dragon.webp"
       },
@@ -288,6 +312,34 @@ export const generatedArtworkManifests = {
       {
         "title": "Vreni Buzz Short",
         "image": "/assets/artwork/dnd/Vreni-buzz-short.webp"
+      },
+      {
+        "title": "Wendigo Colored",
+        "image": "/assets/artwork/dnd/wendigo colored.webp"
+      },
+      {
+        "title": "WhatsApp Image 2024 05 08 At 3.18.36 AM (2)",
+        "image": "/assets/artwork/dnd/WhatsApp Image 2024-05-08 at 3.18.36 AM (2).webp"
+      },
+      {
+        "title": "WhatsApp Image 2024 05 08 At 3.18.36 AM (4)",
+        "image": "/assets/artwork/dnd/WhatsApp Image 2024-05-08 at 3.18.36 AM (4).webp"
+      },
+      {
+        "title": "WhatsApp Image 2024 05 08 At 3.18.37 AM (11)",
+        "image": "/assets/artwork/dnd/WhatsApp Image 2024-05-08 at 3.18.37 AM (11).webp"
+      },
+      {
+        "title": "WhatsApp Image 2024 05 08 At 3.18.37 AM (12)",
+        "image": "/assets/artwork/dnd/WhatsApp Image 2024-05-08 at 3.18.37 AM (12).webp"
+      },
+      {
+        "title": "WhatsApp Image 2026 01 18 At 3.36.07 AM",
+        "image": "/assets/artwork/dnd/WhatsApp Image 2026-01-18 at 3.36.07 AM.webp"
+      },
+      {
+        "title": "Wolf Face Bg",
+        "image": "/assets/artwork/dnd/wolf face bg.webp"
       }
     ]
   },
@@ -307,10 +359,6 @@ export const generatedArtworkManifests = {
         "image": "/assets/artwork/furry/fighter-wolf.webp"
       },
       {
-        "title": "Vulpin",
-        "image": "/assets/artwork/furry/Vulpin.png"
-      },
-      {
         "title": "Wolf & Witch HUnter",
         "image": "/assets/artwork/furry/Wolf-&-Witch-HUnter.webp"
       },
@@ -323,6 +371,30 @@ export const generatedArtworkManifests = {
   "anime": {
     "slug": "anime",
     "items": [
+      {
+        "title": "503806375 3006250609533451 2743823112020178685 N",
+        "image": "/assets/artwork/anime/503806375_3006250609533451_2743823112020178685_n.webp"
+      },
+      {
+        "title": "Chibhi",
+        "image": "/assets/artwork/anime/chibhi.webp"
+      },
+      {
+        "title": "Game Characterr",
+        "image": "/assets/artwork/anime/game characterr.webp"
+      },
+      {
+        "title": "IMG 7444",
+        "image": "/assets/artwork/anime/IMG_7444.webp"
+      },
+      {
+        "title": "IMG 7920",
+        "image": "/assets/artwork/anime/IMG_7920.webp"
+      },
+      {
+        "title": "Julius",
+        "image": "/assets/artwork/anime/julius.webp"
+      },
       {
         "title": "Manga Riging",
         "image": "/assets/artwork/anime/Manga-riging.webp"
@@ -361,34 +433,17 @@ export const generatedArtworkManifests = {
       }
     ]
   },
-  "fantasy": {
-    "slug": "fantasy",
-    "items": []
-  },
-  "robotic": {
-    "slug": "robotic",
-    "items": [
-      {
-        "title": "Aether Machine",
-        "image": "/assets/artwork/robotic/aether-machine.webp"
-      },
-      {
-        "title": "Chrome Sentinel",
-        "image": "/assets/artwork/robotic/chrome-sentinel.webp"
-      },
-      {
-        "title": "Neon Gearframe",
-        "image": "/assets/artwork/robotic/neon-gearframe.webp"
-      },
-      {
-        "title": "Titan Relay",
-        "image": "/assets/artwork/robotic/titan-relay.webp"
-      }
-    ]
-  },
   "warhammer": {
     "slug": "warhammer",
     "items": [
+      {
+        "title": "03b1a875 2c22 48c0 A558 C4402eba582a",
+        "image": "/assets/artwork/warhammer/03b1a875-2c22-48c0-a558-c4402eba582a.webp"
+      },
+      {
+        "title": "999",
+        "image": "/assets/artwork/warhammer/999.webp"
+      },
       {
         "title": "Blood Angels Miniature",
         "image": "/assets/artwork/warhammer/blood-angels-miniature.webp"
@@ -398,16 +453,36 @@ export const generatedArtworkManifests = {
         "image": "/assets/artwork/warhammer/Chemist.webp"
       },
       {
+        "title": "DeWatermark.Ai 1759011091627",
+        "image": "/assets/artwork/warhammer/DeWatermark.ai_1759011091627.webp"
+      },
+      {
+        "title": "DeWatermark.Ai 1759454964456",
+        "image": "/assets/artwork/warhammer/DeWatermark.ai_1759454964456.webp"
+      },
+      {
+        "title": "EwPESc",
+        "image": "/assets/artwork/warhammer/ewPESc.webp"
+      },
+      {
         "title": "Falling Armor Bg",
-        "image": "/assets/artwork/warhammer/falling-armor-bg.png"
+        "image": "/assets/artwork/warhammer/falling-armor-bg.webp"
       },
       {
         "title": "Head Shot",
         "image": "/assets/artwork/warhammer/Head-Shot.webp"
       },
       {
+        "title": "IMG 7368",
+        "image": "/assets/artwork/warhammer/IMG_7368.webp"
+      },
+      {
         "title": "Robot",
         "image": "/assets/artwork/warhammer/Robot.webp"
+      },
+      {
+        "title": "VtDvYn",
+        "image": "/assets/artwork/warhammer/VtDvYn.webp"
       },
       {
         "title": "Warrior",
@@ -419,20 +494,52 @@ export const generatedArtworkManifests = {
     "slug": "group-art",
     "items": [
       {
-        "title": "Elf Couple",
-        "image": "/assets/artwork/group-art/elf-couple.png"
+        "title": "2 Character With Bg Final (2)",
+        "image": "/assets/artwork/group-art/2 character with bg final (2).webp"
+      },
+      {
+        "title": "Artboard 1 (1)",
+        "image": "/assets/artwork/group-art/Artboard 1 (1).webp"
+      },
+      {
+        "title": "Gobllin",
+        "image": "/assets/artwork/group-art/gobllin.webp"
+      },
+      {
+        "title": "Group Art Frog Ch",
+        "image": "/assets/artwork/group-art/group art frog ch.webp"
       },
       {
         "title": "Group Charecter 2",
         "image": "/assets/artwork/group-art/group-charecter-2.webp"
       },
       {
-        "title": "Monitor Lizard",
-        "image": "/assets/artwork/group-art/Monitor-Lizard.png"
+        "title": "IMG 6387",
+        "image": "/assets/artwork/group-art/IMG_6387.webp"
       },
       {
-        "title": "Sci Fi Colonna Family2",
-        "image": "/assets/artwork/group-art/Sci-Fi-Colonna-Family2.png"
+        "title": "IMG 6875",
+        "image": "/assets/artwork/group-art/IMG_6875.webp"
+      },
+      {
+        "title": "Monitor Lizard",
+        "image": "/assets/artwork/group-art/Monitor-Lizard.webp"
+      },
+      {
+        "title": "Orc And Girl Group Art Bg",
+        "image": "/assets/artwork/group-art/orc and girl group art bg.webp"
+      },
+      {
+        "title": "Unnamed (3)",
+        "image": "/assets/artwork/group-art/unnamed (3).webp"
+      },
+      {
+        "title": "WhatsApp Image 2026 04 08 At 5.01.56 AM",
+        "image": "/assets/artwork/group-art/WhatsApp Image 2026-04-08 at 5.01.56 AM.webp"
+      },
+      {
+        "title": "WhatsApp Image 2026 05 21 At 1.08.09 Am",
+        "image": "/assets/artwork/group-art/WhatsApp Image 2026-05-21 at 1.08.09 am.webp"
       }
     ]
   }

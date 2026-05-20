@@ -5,7 +5,7 @@ import { siteAssets } from "@/lib/site-assets";
 import { useInViewState } from "@/hooks/use-in-view";
 import { usePerformanceProfile } from "@/components/performance/PerformanceProvider";
 
-const fantasyArtwork = artworkManifests.fantasy.items[0]?.image ?? siteAssets.hero.sorceress;
+const artistArtwork = artworkManifests.dnd.items[0]?.image ?? siteAssets.hero.sorceress;
 
 const transmissions = [
   {
@@ -21,7 +21,7 @@ const transmissions = [
     name: "ARTIVISTAA",
     role: "Artist",
     side: "right",
-    avatar: fantasyArtwork,
+    avatar: artistArtwork,
     message:
       "Transmission received. I can build that mood with a moonlit palette, ceremonial armor details, and a sharper focal glow around the eyes.",
     stamp: "20:16",
@@ -39,7 +39,7 @@ const transmissions = [
     name: "ARTIVISTAA",
     role: "Artist",
     side: "right",
-    avatar: fantasyArtwork,
+    avatar: artistArtwork,
     message:
       "Understood. I'll deliver a hero-grade composition with marketing-ready framing, plus enough atmosphere to feel like a living world.",
     stamp: "20:20",
@@ -209,7 +209,7 @@ const Testimonials = () => {
                     <div className="flex items-end gap-3">
                       <div className="h-12 w-12 overflow-hidden rounded-full border border-cyan-300/35 shadow-[0_0_22px_rgba(34,211,238,0.2)]">
                         <img
-                          src={fantasyArtwork}
+                          src={artistArtwork}
                           alt="ARTIVISTAA"
                           width={768}
                           height={1024}

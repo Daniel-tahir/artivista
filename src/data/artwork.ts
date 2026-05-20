@@ -6,10 +6,8 @@ import {
 export type ArtworkCategorySlug =
   | "anime"
   | "dnd"
-  | "fantasy"
   | "furry"
   | "group-art"
-  | "robotic"
   | "warhammer";
 
 export interface ArtworkItem {
@@ -37,8 +35,6 @@ export const artworkDropdownItems = [
   { label: "DND", slug: "dnd" },
   { label: "Furry", slug: "furry" },
   { label: "Anime", slug: "anime" },
-  { label: "Fantasy", slug: "fantasy" },
-  { label: "Robotic", slug: "robotic" },
   { label: "Warhammer", slug: "warhammer" },
   { label: "Group Art", slug: "group-art" },
 ] as const satisfies ReadonlyArray<{

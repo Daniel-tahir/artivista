@@ -2,8 +2,16 @@
   "slug": "dnd",
   "items": [
     {
+      "title": "1f1f0f41 4c97 49b8 Bf0d 203ba4588c09 2",
+      "image": "/assets/artwork/dnd/1f1f0f41-4c97-49b8-bf0d-203ba4588c09 2.webp"
+    },
+    {
       "title": "2 Character Male And Female",
       "image": "/assets/artwork/dnd/2-character-male-and-female.webp"
+    },
+    {
+      "title": "59b0bd48 6ff7 4eed A45a D6233097618a",
+      "image": "/assets/artwork/dnd/59b0bd48-6ff7-4eed-a45a-d6233097618a.webp"
     },
     {
       "title": "A3",
@@ -47,10 +55,6 @@
     },
     {
       "title": "Charlie",
-      "image": "/assets/artwork/dnd/Charlie.png"
-    },
-    {
-      "title": "Charlie",
       "image": "/assets/artwork/dnd/Charlie.webp"
     },
     {
@@ -79,7 +83,7 @@
     },
     {
       "title": "Durin",
-      "image": "/assets/artwork/dnd/Durin.png"
+      "image": "/assets/artwork/dnd/Durin.webp"
     },
     {
       "title": "Elf With Jester Mask",
@@ -102,16 +106,24 @@
       "image": "/assets/artwork/dnd/Fairy.webp"
     },
     {
+      "title": "Fallout Final",
+      "image": "/assets/artwork/dnd/fallout final.webp"
+    },
+    {
+      "title": "Fat Guy",
+      "image": "/assets/artwork/dnd/fat guy.webp"
+    },
+    {
       "title": "Fire Man",
       "image": "/assets/artwork/dnd/fire-man.webp"
     },
     {
-      "title": "Gamer",
-      "image": "/assets/artwork/dnd/Gamer.png"
-    },
-    {
       "title": "Girl With Gear System",
       "image": "/assets/artwork/dnd/Girl-with-gear-system.webp"
+    },
+    {
+      "title": "GMDZDXFWMAA5kJZ",
+      "image": "/assets/artwork/dnd/GMDZDXFWMAA5kJZ.webp"
     },
     {
       "title": "Goblin",
@@ -120,6 +132,10 @@
     {
       "title": "Hacker",
       "image": "/assets/artwork/dnd/Hacker.webp"
+    },
+    {
+      "title": "Half Body Hood Guy",
+      "image": "/assets/artwork/dnd/half body hood guy.webp"
     },
     {
       "title": "Half Orc Character",
@@ -132,6 +148,22 @@
     {
       "title": "Horned",
       "image": "/assets/artwork/dnd/Horned.webp"
+    },
+    {
+      "title": "IMG 1216 2",
+      "image": "/assets/artwork/dnd/IMG_1216 2.webp"
+    },
+    {
+      "title": "IMG 5197",
+      "image": "/assets/artwork/dnd/IMG_5197.webp"
+    },
+    {
+      "title": "IMG 6641",
+      "image": "/assets/artwork/dnd/IMG_6641.webp"
+    },
+    {
+      "title": "IMG 9649",
+      "image": "/assets/artwork/dnd/IMG_9649.webp"
     },
     {
       "title": "Keon Ekker",
@@ -166,6 +198,10 @@
       "image": "/assets/artwork/dnd/owl's-charecter-librarian.webp"
     },
     {
+      "title": "Paladin Bg",
+      "image": "/assets/artwork/dnd/paladin bg.webp"
+    },
+    {
       "title": "Pirate And Professor",
       "image": "/assets/artwork/dnd/Pirate-and-professor.webp"
     },
@@ -186,6 +222,14 @@
       "image": "/assets/artwork/dnd/Rich-Dude.webp"
     },
     {
+      "title": "Scarecrooow Bg",
+      "image": "/assets/artwork/dnd/scarecrooow bg.webp"
+    },
+    {
+      "title": "Scavenger Boy Bg",
+      "image": "/assets/artwork/dnd/scavenger boy bg.webp"
+    },
+    {
       "title": "Slave And Dragon",
       "image": "/assets/artwork/dnd/Slave-and-Dragon.webp"
     },
@@ -204,6 +248,34 @@
     {
       "title": "Vreni Buzz Short",
       "image": "/assets/artwork/dnd/Vreni-buzz-short.webp"
+    },
+    {
+      "title": "Wendigo Colored",
+      "image": "/assets/artwork/dnd/wendigo colored.webp"
+    },
+    {
+      "title": "WhatsApp Image 2024 05 08 At 3.18.36 AM (2)",
+      "image": "/assets/artwork/dnd/WhatsApp Image 2024-05-08 at 3.18.36 AM (2).webp"
+    },
+    {
+      "title": "WhatsApp Image 2024 05 08 At 3.18.36 AM (4)",
+      "image": "/assets/artwork/dnd/WhatsApp Image 2024-05-08 at 3.18.36 AM (4).webp"
+    },
+    {
+      "title": "WhatsApp Image 2024 05 08 At 3.18.37 AM (11)",
+      "image": "/assets/artwork/dnd/WhatsApp Image 2024-05-08 at 3.18.37 AM (11).webp"
+    },
+    {
+      "title": "WhatsApp Image 2024 05 08 At 3.18.37 AM (12)",
+      "image": "/assets/artwork/dnd/WhatsApp Image 2024-05-08 at 3.18.37 AM (12).webp"
+    },
+    {
+      "title": "WhatsApp Image 2026 01 18 At 3.36.07 AM",
+      "image": "/assets/artwork/dnd/WhatsApp Image 2026-01-18 at 3.36.07 AM.webp"
+    },
+    {
+      "title": "Wolf Face Bg",
+      "image": "/assets/artwork/dnd/wolf face bg.webp"
     }
   ]
 }

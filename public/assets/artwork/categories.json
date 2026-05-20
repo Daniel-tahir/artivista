@@ -30,26 +30,6 @@
     "featuredImage": "/assets/artwork/anime/skyline-prodigy.webp"
   },
   {
-    "slug": "fantasy",
-    "label": "Fantasy",
-    "name": "Fantasy",
-    "eyebrow": "Mythic Worldbuilding Collection",
-    "subtitle": "A fantasy artwork gallery for creatures and characters, kept within the current website’s theme and responsive system.",
-    "heroImage": "/assets/artwork/fantasy/ember-drake.webp",
-    "featuredTitle": "Fantasy Creatures",
-    "featuredImage": "/assets/artwork/fantasy/ember-drake.webp"
-  },
-  {
-    "slug": "robotic",
-    "label": "Robotic",
-    "name": "Robotic",
-    "eyebrow": "Synthetic Character Collection",
-    "subtitle": "A curated robotic-themed artwork page that preserves the site’s existing aesthetic, structure, and responsiveness.",
-    "heroImage": "/assets/artwork/robotic/chrome-sentinel.webp",
-    "featuredTitle": "Robotic",
-    "featuredImage": "/assets/artwork/robotic/chrome-sentinel.webp"
-  },
-  {
     "slug": "warhammer",
     "label": "Warhammer",
     "name": "Warhammer",

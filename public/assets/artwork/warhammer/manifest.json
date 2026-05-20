@@ -2,6 +2,14 @@
   "slug": "warhammer",
   "items": [
     {
+      "title": "03b1a875 2c22 48c0 A558 C4402eba582a",
+      "image": "/assets/artwork/warhammer/03b1a875-2c22-48c0-a558-c4402eba582a.webp"
+    },
+    {
+      "title": "999",
+      "image": "/assets/artwork/warhammer/999.webp"
+    },
+    {
       "title": "Blood Angels Miniature",
       "image": "/assets/artwork/warhammer/blood-angels-miniature.webp"
     },
@@ -10,16 +18,36 @@
       "image": "/assets/artwork/warhammer/Chemist.webp"
     },
     {
+      "title": "DeWatermark.Ai 1759011091627",
+      "image": "/assets/artwork/warhammer/DeWatermark.ai_1759011091627.webp"
+    },
+    {
+      "title": "DeWatermark.Ai 1759454964456",
+      "image": "/assets/artwork/warhammer/DeWatermark.ai_1759454964456.webp"
+    },
+    {
+      "title": "EwPESc",
+      "image": "/assets/artwork/warhammer/ewPESc.webp"
+    },
+    {
       "title": "Falling Armor Bg",
-      "image": "/assets/artwork/warhammer/falling-armor-bg.png"
+      "image": "/assets/artwork/warhammer/falling-armor-bg.webp"
     },
     {
       "title": "Head Shot",
       "image": "/assets/artwork/warhammer/Head-Shot.webp"
     },
     {
+      "title": "IMG 7368",
+      "image": "/assets/artwork/warhammer/IMG_7368.webp"
+    },
+    {
       "title": "Robot",
       "image": "/assets/artwork/warhammer/Robot.webp"
+    },
+    {
+      "title": "VtDvYn",
+      "image": "/assets/artwork/warhammer/VtDvYn.webp"
     },
     {
       "title": "Warrior",

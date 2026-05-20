@@ -13,8 +13,6 @@ const titleOverrides = new Map([
   ["dnd", new Map([["arcane-duelist", "Arcane Duelist"]])],
   ["furry", new Map([["neon-pathfinder", "Neon Pathfinder"]])],
   ["anime", new Map([["skyline-prodigy", "Skyline Prodigy"]])],
-  ["fantasy", new Map([["ember-drake", "Ember Drake"]])],
-  ["robotic", new Map([["chrome-sentinel", "Chrome Sentinel"]])],
   ["warhammer", new Map([["iron-vanguard", "Iron Vanguard"]])],
   ["group-art", new Map([["guild-assembly", "Guild Assembly"]])],
 ]);

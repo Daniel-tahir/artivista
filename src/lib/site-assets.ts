@@ -1,8 +1,6 @@
 export const siteAssets = {
   about: {
     story: "/assets/about/company-story.webp",
-    processCollagePrimary: "/assets/about/process-collage-1.webp",
-    processCollageSecondary: "/assets/about/process-collage-2.webp",
   },
   hero: {
     portrait: "/assets/hero/hero-portrait.webp",
