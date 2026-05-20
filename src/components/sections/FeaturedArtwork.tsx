@@ -1,18 +1,53 @@
+import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperInstance } from "swiper";
 import {
   artworkCategories,
 } from "@/data/artwork";
+import { useInViewState } from "@/hooks/use-in-view";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 const FeaturedArtwork = () => {
+  const swiperRef = useRef<SwiperInstance | null>(null);
+  const { ref: sectionRef, isInView } = useInViewState({ threshold: 0.2 });
+  const [isPageVisible, setIsPageVisible] = useState(true);
+  const shouldAutoplay = isInView && isPageVisible;
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsPageVisible(document.visibilityState === "visible");
+    };
+
+    handleVisibilityChange();
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    const swiper = swiperRef.current;
+
+    if (!swiper?.autoplay) {
+      return;
+    }
+
+    if (shouldAutoplay) {
+      swiper.autoplay.start();
+    } else {
+      swiper.autoplay.stop();
+    }
+  }, [shouldAutoplay]);
+
   return (
-    <section id="artwork" className="section-shell-lg relative">
+    <section ref={sectionRef} id="artwork" className="section-shell-lg relative">
     <div className="container relative z-10">
       <div className="mb-14 text-center md:mb-16">
         <p className="eyebrow mb-4 text-primary">Portfolio</p>
@@ -37,6 +72,12 @@ const FeaturedArtwork = () => {
             disableOnInteraction: false,
           }}
           speed={800}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+            if (!shouldAutoplay && swiper.autoplay) {
+              swiper.autoplay.stop();
+            }
+          }}
           navigation={{
             prevEl: ".featured-artwork-prev",
             nextEl: ".featured-artwork-next",

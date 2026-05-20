@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import ArtworkCard from "@/components/ArtworkCard";
+import ArtworkGalleryGrid from "@/components/ArtworkGalleryGrid";
 import ArtworkLightbox from "@/components/ArtworkLightbox";
-import MagicButton from "@/components/MagicButton";
 import SiteLayout from "@/components/layout/SiteLayout";
 import {
   artworkCategories,
@@ -17,6 +16,8 @@ const ArtworkCategoryPage = () => {
   const categorySlug = slug as ArtworkCategorySlug | undefined;
   const [activeArtworkIndex, setActiveArtworkIndex] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+  const [isFetching, setIsFetching] = useState(false);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const category = categorySlug
     ? artworkCategories.find((entry) => entry.slug === categorySlug)
     : undefined;
@@ -31,10 +32,78 @@ const ArtworkCategoryPage = () => {
     [activeArtworkIndex, manifest?.items],
   );
 
+  const openArtworkAt = (index: number) => {
+    setActiveArtworkIndex(index);
+  };
+
+  const closeLightbox = (open: boolean) => {
+    if (!open) {
+      setActiveArtworkIndex(null);
+    }
+  };
+
+  const showPreviousArtwork = () => {
+    if (!manifest?.items.length || activeArtworkIndex === null) {
+      return;
+    }
+
+    setActiveArtworkIndex(
+      (activeArtworkIndex - 1 + manifest.items.length) % manifest.items.length,
+    );
+  };
+
+  const showNextArtwork = () => {
+    if (!manifest?.items.length || activeArtworkIndex === null) {
+      return;
+    }
+
+    setActiveArtworkIndex((activeArtworkIndex + 1) % manifest.items.length);
+  };
+
   useEffect(() => {
     setVisibleCount(ITEMS_PER_PAGE);
     setActiveArtworkIndex(null);
+    setIsFetching(false);
   }, [categorySlug]);
+
+  useEffect(() => {
+    const node = loadMoreRef.current;
+
+    if (!node || !hasMoreItems) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || isFetching) {
+          return;
+        }
+
+        setIsFetching(true);
+        setVisibleCount((current) => {
+          const total = manifest?.items.length ?? current;
+          return Math.min(current + ITEMS_PER_PAGE, total);
+        });
+      },
+      {
+        rootMargin: "240px 0px",
+        threshold: 0.1,
+      },
+    );
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, [hasMoreItems, isFetching, manifest?.items.length]);
+
+  useEffect(() => {
+    if (!isFetching) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => setIsFetching(false), 0);
+    return () => window.clearTimeout(timer);
+  }, [isFetching, visibleCount]);
 
   if (!category) {
     return <Navigate to="/not-found" replace />;
@@ -96,35 +165,14 @@ const ArtworkCategoryPage = () => {
             </h2>
           </div>
 
-          <div
-            className={`grid gap-4 ${
-              isGroupArt ? "grid-cols-1 md:grid-cols-2" : "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
-            }`}
-          >
-            {visibleItems.map((item, index) => (
-              <ArtworkCard
-                key={`${item.image}-${index}`}
-                image={item.image}
-                title={item.title}
-                delay={index * 80}
-                mediaClassName={isGroupArt ? "group-art-card-media" : undefined}
-                imageClassName={isGroupArt ? "group-art-card-image" : undefined}
-                onClick={() => setActiveArtworkIndex(index)}
-              />
-            ))}
-          </div>
+          <ArtworkGalleryGrid
+            items={visibleItems}
+            onSelect={openArtworkAt}
+            isGroupArt={isGroupArt}
+          />
 
           {hasMoreItems ? (
-            <div className="mt-10 flex justify-center">
-              <MagicButton
-                variant="ghost"
-                onClick={() =>
-                  setVisibleCount((current) => current + ITEMS_PER_PAGE)
-                }
-              >
-                Load More
-              </MagicButton>
-            </div>
+            <div ref={loadMoreRef} aria-hidden="true" className="h-1 w-full" />
           ) : null}
         </div>
       </section>
@@ -132,13 +180,11 @@ const ArtworkCategoryPage = () => {
       {activeArtwork ? (
         <ArtworkLightbox
           open={activeArtworkIndex !== null}
-          onOpenChange={(open) => {
-            if (!open) {
-              setActiveArtworkIndex(null);
-            }
-          }}
-          title={activeArtwork.title}
-          image={activeArtwork.image}
+          onOpenChange={closeLightbox}
+          items={manifest?.items ?? []}
+          activeIndex={activeArtworkIndex ?? 0}
+          onPrevious={showPreviousArtwork}
+          onNext={showNextArtwork}
         />
       ) : null}
     </SiteLayout>

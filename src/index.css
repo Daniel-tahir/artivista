@@ -115,6 +115,13 @@
     box-shadow: var(--shadow-premium);
   }
 
+  [data-performance="low"] .glass,
+  [data-performance="low"] .mobile-menu-sheet,
+  [data-performance="low"] .site-header-shell-scrolled {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
   .glow-border {
     position: relative;
   }
@@ -156,6 +163,10 @@
     background-size: 200% 200%;
     pointer-events: none;
     animation: stars-drift 60s linear infinite;
+  }
+
+  .cosmic-bg.cosmic-bg-paused::before {
+    animation-play-state: paused;
   }
 
   .divider-glow {
@@ -230,6 +241,10 @@
     animation: scanlines 12s linear infinite;
   }
 
+  .transmission-scanlines.transmission-scanlines-paused {
+    animation-play-state: paused;
+  }
+
   .site-header-shell {
     border: 1px solid transparent;
     will-change: transform, background-color, box-shadow;
@@ -295,14 +310,6 @@
   }
   .mobile-nav-scroll::-webkit-scrollbar {
     display: none;
-  }
-  .group-art-card-media {
-    aspect-ratio: 1.7 / 1;
-  }
-  .group-art-card-image {
-    object-fit: contain;
-    object-position: center;
-    background: rgb(8 7 18 / 0.78);
   }
   .animate-float {
     animation: float 6s ease-in-out infinite;
@@ -397,11 +404,4 @@
     transform: translateY(0) scale(0.992);
   }
 
-  .group-art-card-media {
-    aspect-ratio: 1.85 / 1;
-  }
-
-  .group-art-card-image {
-    object-position: center;
-  }
 }

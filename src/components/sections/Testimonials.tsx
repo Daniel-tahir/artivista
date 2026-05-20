@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Quote, ShieldCheck, Star } from "lucide-react";
 import { artworkManifests } from "@/data/artwork";
 import { siteAssets } from "@/lib/site-assets";
+import { useInViewState } from "@/hooks/use-in-view";
+import { usePerformanceProfile } from "@/components/performance/PerformanceProvider";
 
 const fantasyArtwork = artworkManifests.fantasy.items[0]?.image ?? siteAssets.hero.sorceress;
 
@@ -62,9 +64,12 @@ const featuredTestimonial = {
 };
 
 const Testimonials = () => {
+  const { prefersReducedMotion } = usePerformanceProfile();
+  const { ref: visibilityRef, isInView } = useInViewState({ threshold: 0.2 });
   const sectionRef = useRef<HTMLElement | null>(null);
   const [isActive, setIsActive] = useState(false);
   const [visibleCount, setVisibleCount] = useState(0);
+  const shouldAnimate = isInView && !prefersReducedMotion;
 
   useEffect(() => {
     const node = sectionRef.current;
@@ -97,7 +102,14 @@ const Testimonials = () => {
   const isTyping = isActive && visibleCount < transmissions.length;
 
   return (
-    <section ref={sectionRef} id="testimonials" className="section-shell-lg relative">
+    <section
+      ref={(node) => {
+        sectionRef.current = node;
+        visibilityRef.current = node;
+      }}
+      id="testimonials"
+      className="section-shell-lg relative"
+    >
       <div className="container relative z-10">
         <div
           className={`mx-auto max-w-6xl transition-all duration-1000 ${
@@ -116,7 +128,9 @@ const Testimonials = () => {
           <div className="transmission-shell glow-border relative overflow-hidden rounded-[2rem] border border-white/10 bg-[linear-gradient(135deg,hsl(var(--card)/0.92),hsl(var(--secondary)/0.74))] shadow-[0_30px_120px_-40px_hsl(var(--primary)/0.42)] backdrop-blur-xl">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,hsl(var(--primary)/0.2),transparent_36%),radial-gradient(circle_at_90%_20%,hsl(var(--neon-blue)/0.14),transparent_28%),radial-gradient(circle_at_bottom,hsl(var(--primary-glow)/0.18),transparent_38%)]" />
             <div className="transmission-noise absolute inset-0 opacity-20" />
-            <div className="transmission-scanlines absolute inset-0 opacity-20" />
+            <div
+              className={`transmission-scanlines absolute inset-0 opacity-20 ${shouldAnimate ? "" : "transmission-scanlines-paused"}`}
+            />
             <div className="pointer-events-none absolute -left-10 top-12 h-24 w-24 rounded-full bg-primary/20 blur-3xl" />
             <div className="pointer-events-none absolute right-6 top-1/3 h-28 w-28 rounded-full bg-blue-500/20 blur-3xl" />
 

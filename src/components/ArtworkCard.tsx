@@ -1,4 +1,4 @@
-import { memo, MouseEvent, useRef } from "react";
+import { memo, PointerEvent, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -19,26 +19,58 @@ const ArtworkCard = ({
   onClick,
 }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
+  const frameRef = useRef<number | null>(null);
+  const latestEventRef = useRef<PointerEvent<HTMLDivElement> | null>(null);
   const isInteractive = Boolean(onClick);
 
-  const handleMove = (e: MouseEvent<HTMLDivElement>) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    el.style.transform = `perspective(1000px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-8px)`;
+  const handlePointerEnter = () => {
+    if (ref.current) {
+      rectRef.current = ref.current.getBoundingClientRect();
+    }
   };
 
-  const handleLeave = () => {
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (!rectRef.current) return;
+
+    latestEventRef.current = event;
+
+    if (frameRef.current !== null) {
+      return;
+    }
+
+    frameRef.current = window.requestAnimationFrame(() => {
+      const el = ref.current;
+      const rect = rectRef.current;
+      const latestEvent = latestEventRef.current;
+
+      if (!el || !rect || !latestEvent) {
+        frameRef.current = null;
+        return;
+      }
+
+      const x = (latestEvent.clientX - rect.left) / rect.width - 0.5;
+      const y = (latestEvent.clientY - rect.top) / rect.height - 0.5;
+      el.style.transform = `perspective(1000px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-8px)`;
+      frameRef.current = null;
+    });
+  };
+
+  const handlePointerLeave = () => {
+    rectRef.current = null;
+    if (frameRef.current !== null) {
+      window.cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
+    }
     if (ref.current) ref.current.style.transform = "";
   };
 
   return (
     <div
       ref={ref}
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
+      onPointerEnter={handlePointerEnter}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
       className={cn(
         "group relative rounded-2xl glass glow-border overflow-hidden transition-transform duration-500 ease-out shadow-card-cosmic animate-fade-in-up",
         isInteractive && "cursor-pointer",

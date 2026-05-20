@@ -36,6 +36,7 @@ const PerformanceProvider = ({ children }: PerformanceProviderProps) => {
   const [canHover, setCanHover] = useState(() => getMediaMatches(DESKTOP_HOVER_QUERY));
   const scrollFrameRef = useRef(0);
   const scrolledRef = useRef(false);
+  const isLowPower = prefersReducedMotion || isTouchDevice;
 
   useEffect(() => {
     const reducedMotionMedia = window.matchMedia(REDUCED_MOTION_QUERY);
@@ -84,6 +85,19 @@ const PerformanceProvider = ({ children }: PerformanceProviderProps) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const root = document.documentElement;
+    root.dataset.performance = isLowPower ? "low" : "full";
+
+    return () => {
+      if (root.dataset.performance === (isLowPower ? "low" : "full")) {
+        delete root.dataset.performance;
+      }
+    };
+  }, [isLowPower]);
 
   const value = useMemo(
     () => ({
