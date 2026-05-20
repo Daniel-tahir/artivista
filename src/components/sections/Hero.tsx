@@ -1,11 +1,18 @@
 import MagicButton from "../MagicButton";
 import WhatsAppIcon from "../WhatsAppIcon";
 import { siteAssets } from "@/lib/site-assets";
+import { usePerformanceProfile } from "@/components/performance/PerformanceProvider";
+import { useInViewState } from "@/hooks/use-in-view";
 
 const Hero = () => {
+  const { prefersReducedMotion } = usePerformanceProfile();
+  const { ref: heroRef, isInView } = useInViewState({ threshold: 0.2 });
+  const shouldAnimate = isInView && !prefersReducedMotion;
+
   return (
     <section
       id="home"
+      ref={heroRef}
       className="section-shell-lg relative flex min-h-screen items-center justify-center overflow-hidden"
     >
       {/* Background image */}
@@ -18,19 +25,29 @@ const Hero = () => {
           fetchPriority="high"
           decoding="async"
           className="h-full w-full object-cover animate-float-slow"
+          style={{ animationPlayState: shouldAnimate ? "running" : "paused" }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,hsl(var(--background))_85%)]" />
       </div>
 
       {/* Glow orbs */}
-      <div className="absolute left-1/4 top-1/3 h-80 w-80 rounded-full bg-primary/20 blur-[100px] animate-pulse-glow" />
-      <div className="absolute bottom-1/4 right-1/4 h-80 w-80 rounded-full bg-neon-magenta/16 blur-[100px] animate-pulse-glow" style={{ animationDelay: "1.5s" }} />
+      <div
+        className="absolute left-1/4 top-1/3 h-80 w-80 rounded-full bg-primary/20 blur-[100px] animate-pulse-glow"
+        style={{ animationPlayState: shouldAnimate ? "running" : "paused" }}
+      />
+      <div
+        className="absolute bottom-1/4 right-1/4 h-80 w-80 rounded-full bg-neon-magenta/16 blur-[100px] animate-pulse-glow"
+        style={{ animationDelay: "1.5s", animationPlayState: shouldAnimate ? "running" : "paused" }}
+      />
 
       {/* Content */}
       <div className="container relative z-10 pb-16 pt-24 text-center md:pt-28">
         <div className="glass animate-fade-in-up mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 md:mb-10">
-          <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+          <span
+            className="w-2 h-2 rounded-full bg-primary animate-pulse"
+            style={{ animationPlayState: shouldAnimate ? "running" : "paused" }}
+          />
           <span className="eyebrow text-muted-foreground">ARTIVISTAA Custom Character Studio</span>
         </div>
 
@@ -71,9 +88,15 @@ const Hero = () => {
 </div>
 
         {/* Scroll indicator */}
-        <div className="animate-float absolute bottom-8 left-1/2 -translate-x-1/2">
+        <div
+          className="animate-float absolute bottom-8 left-1/2 -translate-x-1/2"
+          style={{ animationPlayState: shouldAnimate ? "running" : "paused" }}
+        >
           <div className="flex h-10 w-6 items-start justify-center rounded-full border border-white/18 bg-white/[0.03] p-1.5">
-            <div className="w-1 h-2 rounded-full bg-primary animate-pulse" />
+            <div
+              className="w-1 h-2 rounded-full bg-primary animate-pulse"
+              style={{ animationPlayState: shouldAnimate ? "running" : "paused" }}
+            />
           </div>
         </div>
       </div>

@@ -115,6 +115,13 @@
     box-shadow: var(--shadow-premium);
   }
 
+  [data-performance="low"] .glass,
+  [data-performance="low"] .mobile-menu-sheet,
+  [data-performance="low"] .site-header-shell-scrolled {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
   .glow-border {
     position: relative;
   }
@@ -156,6 +163,10 @@
     background-size: 200% 200%;
     pointer-events: none;
     animation: stars-drift 60s linear infinite;
+  }
+
+  .cosmic-bg.cosmic-bg-paused::before {
+    animation-play-state: paused;
   }
 
   .divider-glow {
@@ -228,6 +239,10 @@
     );
     background-size: 100% 8px;
     animation: scanlines 12s linear infinite;
+  }
+
+  .transmission-scanlines.transmission-scanlines-paused {
+    animation-play-state: paused;
   }
 
   .site-header-shell {

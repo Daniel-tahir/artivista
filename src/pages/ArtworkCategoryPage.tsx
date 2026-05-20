@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import ArtworkGalleryGrid from "@/components/ArtworkGalleryGrid";
 import ArtworkLightbox from "@/components/ArtworkLightbox";
-import MagicButton from "@/components/MagicButton";
 import SiteLayout from "@/components/layout/SiteLayout";
 import {
   artworkCategories,
@@ -17,6 +16,8 @@ const ArtworkCategoryPage = () => {
   const categorySlug = slug as ArtworkCategorySlug | undefined;
   const [activeArtworkIndex, setActiveArtworkIndex] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
+  const [isFetching, setIsFetching] = useState(false);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const category = categorySlug
     ? artworkCategories.find((entry) => entry.slug === categorySlug)
     : undefined;
@@ -62,7 +63,47 @@ const ArtworkCategoryPage = () => {
   useEffect(() => {
     setVisibleCount(ITEMS_PER_PAGE);
     setActiveArtworkIndex(null);
+    setIsFetching(false);
   }, [categorySlug]);
+
+  useEffect(() => {
+    const node = loadMoreRef.current;
+
+    if (!node || !hasMoreItems) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || isFetching) {
+          return;
+        }
+
+        setIsFetching(true);
+        setVisibleCount((current) => {
+          const total = manifest?.items.length ?? current;
+          return Math.min(current + ITEMS_PER_PAGE, total);
+        });
+      },
+      {
+        rootMargin: "240px 0px",
+        threshold: 0.1,
+      },
+    );
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, [hasMoreItems, isFetching, manifest?.items.length]);
+
+  useEffect(() => {
+    if (!isFetching) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => setIsFetching(false), 0);
+    return () => window.clearTimeout(timer);
+  }, [isFetching, visibleCount]);
 
   if (!category) {
     return <Navigate to="/not-found" replace />;
@@ -131,16 +172,7 @@ const ArtworkCategoryPage = () => {
           />
 
           {hasMoreItems ? (
-            <div className="mt-10 flex justify-center">
-              <MagicButton
-                variant="ghost"
-                onClick={() =>
-                  setVisibleCount((current) => current + ITEMS_PER_PAGE)
-                }
-              >
-                Load More
-              </MagicButton>
-            </div>
+            <div ref={loadMoreRef} aria-hidden="true" className="h-1 w-full" />
           ) : null}
         </div>
       </section>

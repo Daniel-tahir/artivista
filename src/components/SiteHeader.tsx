@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { usePerformanceProfile } from "@/components/performance/PerformanceProvider";
 import { Menu, ChevronDown } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -29,32 +29,7 @@ const navItems = [
 const SiteHeader = () => {
   const location = useLocation();
   const homeHref = location.pathname === "/" ? "#home" : "/#home";
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    let ticking = false;
-
-    const updateScrollState = () => {
-      setIsScrolled(window.scrollY > 24);
-      ticking = false;
-    };
-
-    const handleScroll = () => {
-      if (ticking) {
-        return;
-      }
-
-      ticking = true;
-      window.requestAnimationFrame(updateScrollState);
-    };
-
-    updateScrollState();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  const { isScrolled } = usePerformanceProfile();
 
   return (
     <header className="fixed top-0 inset-x-0 z-50">
