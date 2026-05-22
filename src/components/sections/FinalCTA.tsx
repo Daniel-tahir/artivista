@@ -24,10 +24,6 @@ const FinalCTA = () => (
           </MagicButton>
         </div>
       </div>
-
-      <p className="mt-10 text-xs tracking-[0.24em] text-muted-foreground/60">
-        © {new Date().getFullYear()} ARTIVISTAA STUDIO · Crafted in the cosmos
-      </p>
     </div>
   </section>
 );

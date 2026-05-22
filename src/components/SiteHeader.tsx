@@ -40,7 +40,7 @@ const SiteHeader = () => {
           }`}
         >
           <div className="flex items-center justify-between gap-4">
-            <a href={homeHref} className="flex items-center gap-3">
+            <Link to={homeHref} className="flex items-center gap-3">
               <img
                 src={siteAssets.navbar.logo}
                 alt="ARTIVISTAA logo"
@@ -57,29 +57,19 @@ const SiteHeader = () => {
                   Custom Characters
                 </div>
               </div>
-            </a>
+            </Link>
 
             <nav className="hidden md:flex items-center gap-1.5">
               {navItems
                 .filter((item) => item.label !== "Artwork")
                 .map((item) => (
-                  item.href.startsWith("/") && !item.href.includes("#") ? (
-                    <Link
-                      key={item.label}
-                      to={item.href}
-                      className="interactive-surface rounded-full px-4 py-2 text-sm text-muted-foreground hover:bg-white/[0.06] hover:text-foreground"
-                    >
-                      {item.label}
-                    </Link>
-                  ) : (
-                    <a
-                      key={item.label}
-                      href={item.href}
-                      className="interactive-surface rounded-full px-4 py-2 text-sm text-muted-foreground hover:bg-white/[0.06] hover:text-foreground"
-                    >
-                      {item.label}
-                    </a>
-                  )
+                  <Link
+                    key={item.label}
+                    to={item.href}
+                    className="interactive-surface rounded-full px-4 py-2 text-sm text-muted-foreground hover:bg-white/[0.06] hover:text-foreground"
+                  >
+                    {item.label}
+                  </Link>
                 ))}
 
               <DropdownMenu>
@@ -146,21 +136,12 @@ const SiteHeader = () => {
                         .filter((item) => item.label !== "Artwork")
                         .map((item) => (
                           <SheetClose asChild key={item.label}>
-                            {item.href.startsWith("/") && !item.href.includes("#") ? (
-                              <Link
-                                to={item.href}
-                                className="interactive-surface rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-foreground hover:border-white/20 hover:bg-white/[0.08]"
-                              >
-                                {item.label}
-                              </Link>
-                            ) : (
-                              <a
-                                href={item.href}
-                                className="interactive-surface rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-foreground hover:border-white/20 hover:bg-white/[0.08]"
-                              >
-                                {item.label}
-                              </a>
-                            )}
+                            <Link
+                              to={item.href}
+                              className="interactive-surface rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-foreground hover:border-white/20 hover:bg-white/[0.08]"
+                            >
+                              {item.label}
+                            </Link>
                           </SheetClose>
                         ))}
                   </div>
@@ -170,21 +151,12 @@ const SiteHeader = () => {
                       .filter((item) => item.label !== "Artwork")
                       .map((item) => (
                         <SheetClose asChild key={item.label}>
-                          {item.href.startsWith("/") && !item.href.includes("#") ? (
-                            <Link
-                              to={item.href}
-                              className="interactive-surface rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-foreground hover:border-white/20 hover:bg-white/[0.08]"
-                            >
-                              {item.label}
-                            </Link>
-                          ) : (
-                            <a
-                              href={item.href}
-                              className="interactive-surface rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-foreground hover:border-white/20 hover:bg-white/[0.08]"
-                            >
-                              {item.label}
-                            </a>
-                          )}
+                          <Link
+                            to={item.href}
+                            className="interactive-surface rounded-xl border border-white/10 bg-white/[0.05] px-4 py-3 text-sm text-foreground hover:border-white/20 hover:bg-white/[0.08]"
+                          >
+                            {item.label}
+                          </Link>
                         </SheetClose>
                       ))}
                   </div>

@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import HashScrollHandler from "@/components/HashScrollHandler";
 import PageLoader from "@/components/performance/PageLoader";
 import PerformanceProvider from "@/components/performance/PerformanceProvider";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -21,6 +22,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <HashScrollHandler />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
