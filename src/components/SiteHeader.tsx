@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { artworkDropdownItems } from "@/data/artwork";
+import { useArtworkLibrary } from "@/hooks/use-artwork-library";
 import { siteAssets } from "@/lib/site-assets";
 
 const navItems = [
@@ -30,6 +30,7 @@ const SiteHeader = () => {
   const location = useLocation();
   const homeHref = location.pathname === "/" ? "#home" : "/#home";
   const { isScrolled } = usePerformanceProfile();
+  const { categorySummaries } = useArtworkLibrary();
 
   return (
     <header className="fixed top-0 inset-x-0 z-50">
@@ -88,7 +89,7 @@ const SiteHeader = () => {
                   sideOffset={10}
                   className="glass glow-border w-56 rounded-2xl border-white/10 bg-background/90 p-2 text-foreground backdrop-blur-xl"
                 >
-                  {artworkDropdownItems.map((category) => (
+                  {categorySummaries.map((category) => (
                     <DropdownMenuItem key={category.slug} asChild>
                       <Link
                         to={`/artwork/${category.slug}`}
@@ -166,7 +167,7 @@ const SiteHeader = () => {
                       Artwork
                     </div>
                     <div className="flex flex-col gap-2">
-                        {artworkDropdownItems.map((category) => (
+                        {categorySummaries.map((category) => (
                           <SheetClose asChild key={category.slug}>
                             <Link
                               to={`/artwork/${category.slug}`}

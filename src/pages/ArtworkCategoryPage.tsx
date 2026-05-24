@@ -3,33 +3,27 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import ArtworkGalleryGrid from "@/components/ArtworkGalleryGrid";
 import ArtworkLightbox from "@/components/ArtworkLightbox";
 import SiteLayout from "@/components/layout/SiteLayout";
-import {
-  artworkCategories,
-  artworkManifests,
-  type ArtworkCategorySlug,
-} from "@/data/artwork";
+import { useArtworkLibrary } from "@/hooks/use-artwork-library";
 
 const ITEMS_PER_PAGE = 10;
 
 const ArtworkCategoryPage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const categorySlug = slug as ArtworkCategorySlug | undefined;
+  const categorySlug = slug;
+  const { getCategoryBySlug, getArtworksByCategory, isLoading } = useArtworkLibrary();
   const [activeArtworkIndex, setActiveArtworkIndex] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [isFetching, setIsFetching] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
-  const category = categorySlug
-    ? artworkCategories.find((entry) => entry.slug === categorySlug)
-    : undefined;
+  const category = categorySlug ? getCategoryBySlug(categorySlug) : undefined;
   const isGroupArt = category?.slug === "group-art";
-  const manifest = categorySlug ? artworkManifests[categorySlug] : undefined;
-  const visibleItems = manifest?.items.slice(0, visibleCount) ?? [];
-  const hasMoreItems = (manifest?.items.length ?? 0) > visibleCount;
+  const categoryItems = categorySlug ? getArtworksByCategory(categorySlug) : [];
+  const visibleItems = categoryItems.slice(0, visibleCount);
+  const hasMoreItems = categoryItems.length > visibleCount;
 
   const activeArtwork = useMemo(
-    () =>
-      activeArtworkIndex !== null ? manifest?.items[activeArtworkIndex] : undefined,
-    [activeArtworkIndex, manifest?.items],
+    () => (activeArtworkIndex !== null ? categoryItems[activeArtworkIndex] : undefined),
+    [activeArtworkIndex, categoryItems],
   );
 
   const openArtworkAt = (index: number) => {
@@ -43,21 +37,21 @@ const ArtworkCategoryPage = () => {
   };
 
   const showPreviousArtwork = () => {
-    if (!manifest?.items.length || activeArtworkIndex === null) {
+    if (!categoryItems.length || activeArtworkIndex === null) {
       return;
     }
 
     setActiveArtworkIndex(
-      (activeArtworkIndex - 1 + manifest.items.length) % manifest.items.length,
+      (activeArtworkIndex - 1 + categoryItems.length) % categoryItems.length,
     );
   };
 
   const showNextArtwork = () => {
-    if (!manifest?.items.length || activeArtworkIndex === null) {
+    if (!categoryItems.length || activeArtworkIndex === null) {
       return;
     }
 
-    setActiveArtworkIndex((activeArtworkIndex + 1) % manifest.items.length);
+    setActiveArtworkIndex((activeArtworkIndex + 1) % categoryItems.length);
   };
 
   useEffect(() => {
@@ -81,7 +75,7 @@ const ArtworkCategoryPage = () => {
 
         setIsFetching(true);
         setVisibleCount((current) => {
-          const total = manifest?.items.length ?? current;
+          const total = categoryItems.length || current;
           return Math.min(current + ITEMS_PER_PAGE, total);
         });
       },
@@ -94,7 +88,7 @@ const ArtworkCategoryPage = () => {
     observer.observe(node);
 
     return () => observer.disconnect();
-  }, [hasMoreItems, isFetching, manifest?.items.length]);
+  }, [categoryItems.length, hasMoreItems, isFetching]);
 
   useEffect(() => {
     if (!isFetching) {
@@ -104,6 +98,24 @@ const ArtworkCategoryPage = () => {
     const timer = window.setTimeout(() => setIsFetching(false), 0);
     return () => window.clearTimeout(timer);
   }, [isFetching, visibleCount]);
+
+  if (isLoading) {
+    return (
+      <SiteLayout>
+        <section className="section-shell-lg pt-36 md:pt-40">
+          <div className="container">
+            <div className="glass mx-auto max-w-3xl rounded-[2rem] border border-white/10 px-6 py-12 text-center">
+              <p className="eyebrow mb-4 text-primary">Loading</p>
+              <h1 className="section-title text-3xl text-glow md:text-5xl">Syncing artwork gallery</h1>
+              <p className="section-copy mt-4 text-sm md:text-base">
+                Pulling the latest category artwork from Supabase.
+              </p>
+            </div>
+          </div>
+        </section>
+      </SiteLayout>
+    );
+  }
 
   if (!category) {
     return <Navigate to="/not-found" replace />;
@@ -181,7 +193,7 @@ const ArtworkCategoryPage = () => {
         <ArtworkLightbox
           open={activeArtworkIndex !== null}
           onOpenChange={closeLightbox}
-          items={manifest?.items ?? []}
+          items={categoryItems.map((item) => ({ title: item.title, image: item.image }))}
           activeIndex={activeArtworkIndex ?? 0}
           onPrevious={showPreviousArtwork}
           onNext={showNextArtwork}

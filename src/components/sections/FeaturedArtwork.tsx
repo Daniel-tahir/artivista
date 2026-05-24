@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperInstance } from "swiper";
-import { artworkCategories } from "@/data/artwork";
+import { useArtworkLibrary } from "@/hooks/use-artwork-library";
 import { useInViewState } from "@/hooks/use-in-view";
 
 import "swiper/css";
@@ -16,6 +16,8 @@ const FeaturedArtwork = () => {
   const { ref: sectionRef, isInView } = useInViewState({ threshold: 0.2 });
   const [isPageVisible, setIsPageVisible] = useState(true);
   const shouldAutoplay = isInView && isPageVisible;
+  const { featuredArtworks } = useArtworkLibrary();
+  const showcaseArtworks = featuredArtworks;
 
   useEffect(() => {
     const handleVisibilityChange = () => {
@@ -62,7 +64,7 @@ const FeaturedArtwork = () => {
 
           <Swiper
             modules={[Autoplay, Navigation, Pagination]}
-            loop={artworkCategories.length > 3}
+            loop={showcaseArtworks.length > 3}
             slidesPerView={1}
             spaceBetween={12}
             autoplay={{
@@ -96,18 +98,18 @@ const FeaturedArtwork = () => {
             lazyPreloadPrevNext={1}
             className="featured-artwork-swiper"
           >
-            {artworkCategories.map((card) => (
-              <SwiperSlide key={card.slug} className="featured-artwork-slide">
+            {showcaseArtworks.map((artwork) => (
+              <SwiperSlide key={artwork.id} className="featured-artwork-slide">
                 <Link
-                  to={`/artwork/${card.slug}`}
-                  aria-label={`Open ${card.featuredTitle} artwork page`}
+                  to={`/artwork/${artwork.category}`}
+                  aria-label={`Open ${artwork.title} artwork page`}
                   className="block"
                 >
                   <article className="interactive-surface group overflow-hidden rounded-3xl border border-white/12 bg-white/[0.04] shadow-[0_22px_60px_-28px_rgba(15,23,42,0.95)] backdrop-blur-xl hover:-translate-y-1">
                     <div className="relative aspect-[3/4] overflow-hidden rounded-3xl">
                       <img
-                        src={card.featuredImage}
-                        alt={card.featuredTitle}
+                        src={artwork.image}
+                        alt={artwork.title}
                         loading="lazy"
                         decoding="async"
                         width={768}
@@ -123,7 +125,7 @@ const FeaturedArtwork = () => {
                         </p>
 
                         <h3 className="font-display text-xl font-semibold tracking-[-0.03em] text-white drop-shadow-[0_10px_35px_rgba(0,0,0,0.35)] md:text-[1.7rem]">
-                          {card.featuredTitle}
+                          {artwork.title}
                         </h3>
                       </div>
                     </div>

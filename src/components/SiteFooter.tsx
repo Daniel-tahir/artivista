@@ -1,4 +1,5 @@
 import { Instagram, X } from "lucide-react";
+import { Link } from "react-router-dom";
 import WhatsAppIcon from "./WhatsAppIcon";
 import { siteAssets } from "@/lib/site-assets";
 
@@ -108,8 +109,16 @@ const SiteFooter = () => {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-muted-foreground md:flex-row md:items-center md:justify-between">
-          <p>© 2026 ARTIVISTAA. All rights reserved.</p>
+        <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-muted-foreground md:flex-row md:items-end md:justify-between">
+          <div className="flex flex-col items-start gap-2 text-left">
+            <p>© 2026 ARTIVISTAA. All rights reserved.</p>
+            <Link
+              to="/admin"
+              className="cursor-pointer text-[11px] uppercase tracking-[0.28em] text-muted-foreground/50 transition-all duration-300 hover:text-primary hover:drop-shadow-[0_0_12px_rgba(168,85,247,0.45)]"
+            >
+              Admin
+            </Link>
+          </div>
           <p>Instagram, Twitter, WhatsApp, and ArtStation handles are shown for quick contact.</p>
         </div>
       </div>

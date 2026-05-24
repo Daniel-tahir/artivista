@@ -1,59 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Quote, ShieldCheck, Star } from "lucide-react";
-import { artworkManifests } from "@/data/artwork";
+import { useArtworkLibrary } from "@/hooks/use-artwork-library";
 import { siteAssets } from "@/lib/site-assets";
 import { useInViewState } from "@/hooks/use-in-view";
 import { usePerformanceProfile } from "@/components/performance/PerformanceProvider";
-
-const artistArtwork = artworkManifests.dnd.items[0]?.image ?? siteAssets.hero.sorceress;
-
-const transmissions = [
-  {
-    name: "Elena R.",
-    role: "Client",
-    side: "left",
-    avatar: siteAssets.hero.sorceress,
-    message:
-      "Hi! I need a cinematic portrait for our game launch. I want it to feel regal, dangerous, and unmistakably ours.",
-    stamp: "20:14",
-  },
-  {
-    name: "ARTIVISTAA",
-    role: "Artist",
-    side: "right",
-    avatar: artistArtwork,
-    message:
-      "Transmission received. I can build that mood with a moonlit palette, ceremonial armor details, and a sharper focal glow around the eyes.",
-    stamp: "20:16",
-  },
-  {
-    name: "Elena R.",
-    role: "Client",
-    side: "left",
-    avatar: siteAssets.hero.sorceress,
-    message:
-      "That sounds perfect. We also need it polished enough for the landing page and social teasers without losing the fantasy soul.",
-    stamp: "20:18",
-  },
-  {
-    name: "ARTIVISTAA",
-    role: "Artist",
-    side: "right",
-    avatar: artistArtwork,
-    message:
-      "Understood. I'll deliver a hero-grade composition with marketing-ready framing, plus enough atmosphere to feel like a living world.",
-    stamp: "20:20",
-  },
-  {
-    name: "Elena R.",
-    role: "Client",
-    side: "left",
-    avatar: siteAssets.hero.sorceress,
-    message:
-      "You absolutely nailed it. The final piece felt like it came from our own lore bible, only better.",
-    stamp: "20:27",
-  },
-];
 
 const featuredTestimonial = {
   name: "ELENA R.",
@@ -64,12 +14,61 @@ const featuredTestimonial = {
 };
 
 const Testimonials = () => {
+  const { getArtworksByCategory } = useArtworkLibrary();
   const { prefersReducedMotion } = usePerformanceProfile();
   const { ref: visibilityRef, isInView } = useInViewState({ threshold: 0.2 });
   const sectionRef = useRef<HTMLElement | null>(null);
   const [isActive, setIsActive] = useState(false);
   const [visibleCount, setVisibleCount] = useState(0);
   const shouldAnimate = isInView && !prefersReducedMotion;
+  const artistArtwork = getArtworksByCategory("dnd")[0]?.image ?? siteAssets.hero.sorceress;
+  const transmissions = [
+    {
+      name: "Elena R.",
+      role: "Client",
+      side: "left",
+      avatar: siteAssets.hero.sorceress,
+      message:
+        "Hi! I need a cinematic portrait for our game launch. I want it to feel regal, dangerous, and unmistakably ours.",
+      stamp: "20:14",
+    },
+    {
+      name: "ARTIVISTAA",
+      role: "Artist",
+      side: "right",
+      avatar: artistArtwork,
+      message:
+        "Transmission received. I can build that mood with a moonlit palette, ceremonial armor details, and a sharper focal glow around the eyes.",
+      stamp: "20:16",
+    },
+    {
+      name: "Elena R.",
+      role: "Client",
+      side: "left",
+      avatar: siteAssets.hero.sorceress,
+      message:
+        "That sounds perfect. We also need it polished enough for the landing page and social teasers without losing the fantasy soul.",
+      stamp: "20:18",
+    },
+    {
+      name: "ARTIVISTAA",
+      role: "Artist",
+      side: "right",
+      avatar: artistArtwork,
+      message:
+        "Understood. I'll deliver a hero-grade composition with marketing-ready framing, plus enough atmosphere to feel like a living world.",
+      stamp: "20:20",
+    },
+    {
+      name: "Elena R.",
+      role: "Client",
+      side: "left",
+      avatar: siteAssets.hero.sorceress,
+      message:
+        "You absolutely nailed it. The final piece felt like it came from our own lore bible, only better.",
+      stamp: "20:27",
+    },
+  ];
 
   useEffect(() => {
     const node = sectionRef.current;

@@ -11,6 +11,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 const Index = lazy(() => import("./pages/Index.tsx"));
 const About = lazy(() => import("./pages/About.tsx"));
 const ArtworkCategoryPage = lazy(() => import("./pages/ArtworkCategoryPage.tsx"));
+const AdminDashboardPage = lazy(() => import("./pages/admin/AdminDashboardPage.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
               <Route path="/artwork/:slug" element={<ArtworkCategoryPage />} />
+              <Route path="/admin" element={<AdminDashboardPage />} />
               <Route path="/not-found" element={<NotFound />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
