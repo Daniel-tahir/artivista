@@ -6,7 +6,7 @@ import FinalCTA from "@/components/sections/FinalCTA";
 import SiteLayout from "@/components/layout/SiteLayout";
 
 const FeaturedArtwork = lazy(() => import("@/components/sections/FeaturedArtwork"));
-const Testimonials = lazy(() => import("@/components/sections/Testimonials"));
+const TestimonialsMarquee = lazy(() => import("@/components/sections/TestimonialsMarquee"));
 
 const Index = () => {
   return (
@@ -22,7 +22,7 @@ const Index = () => {
         <HowItWorks />
         <div className="divider-glow w-3/4 mx-auto" />
         <Suspense fallback={null}>
-          <Testimonials />
+          <TestimonialsMarquee />
         </Suspense>
         <FinalCTA />
       </div>
