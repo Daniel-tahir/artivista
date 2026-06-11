@@ -14,7 +14,7 @@ const MidCTA = () => (
         Your Idea, Your Character
       </h2>
       <p className="section-copy mx-auto mb-10 max-w-2xl text-lg md:mb-12 md:text-xl">
-        Describe your vision, and we bring it to life — pixel by pixel, glow by glow.
+        Describe your vision, and we bring it to life pixel by pixel, glow by glow.
       </p>
       <MagicButton
         size="lg"

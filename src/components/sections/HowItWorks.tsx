@@ -4,7 +4,7 @@ const steps = [
   { icon: MessageCircle, title: "Share Your Idea", desc: "Tell us your character concept via WhatsApp.", color: "primary" },
   { icon: Sparkles, title: "We Discuss & Refine", desc: "We refine your idea into a perfect vision.", color: "neon-magenta" },
   { icon: Palette, title: "We Create Your Character", desc: "Our artists bring it to life with cinematic detail.", color: "neon-blue" },
-  { icon: Gift, title: "We Deliver Character", desc: "Receive your final high-resolution artwork.", color: "primary-glow" },
+  { icon: Gift, title: "We Deliver Character", desc: "Receive your final high resolution artwork.", color: "primary-glow" },
 ];
 
 const HowItWorks = () => (

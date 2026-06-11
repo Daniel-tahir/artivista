@@ -4,9 +4,9 @@ import { useDocumentMetadata } from "@/hooks/use-document-metadata";
 import { siteAssets } from "@/lib/site-assets";
 
 const aboutParagraphs = [
-  "Art has never been just a skill for me — it’s something personal. I enjoy taking ideas, emotions, and imagination and turning them into visuals that people can actually connect with.",
+  "Art has never been just a skill for me; it’s something personal. I enjoy taking ideas, emotions, and imagination and turning them into visuals that people can actually connect with.",
   "Every piece I create has time, effort, and meaning behind it. I don’t believe in making artwork that only looks good; I want it to feel memorable and leave an impression.",
-  "Whether it’s a bold concept, a custom character, or a simple idea, I focus on creating work that feels unique to the person it’s made for. Because good art isn’t only about details — it’s about emotion.",
+  "Whether it’s a bold concept, a custom character, or a simple idea, I focus on creating work that feels unique to the person it’s made for. Because good art isn’t only about details; it’s about emotion.",
   "I put passion and originality into every project with one goal: creating something clients genuinely love, feel proud of, and want to keep.",
   "If you’re looking for creative work made with real dedication and attention, you’re in the right place.",
   "Let’s create something unforgettable together.",

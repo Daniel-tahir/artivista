@@ -170,9 +170,9 @@ const TestimonialsMarquee = () => {
 
   const hasImages = allImages.length > 0;
 
-  const reviewsCount = useCountUp(2000, "+", countersStarted);
+  const reviewsCount = useCountUp(300, "+", countersStarted);
   const customersCount = useCountUp(500, "+", countersStarted);
-  const citiesCount = useCountUp(120, "+", countersStarted);
+  const citiesCount = useCountUp(80, "+", countersStarted);
 
   useEffect(() => {
     const el = sectionRef.current;
