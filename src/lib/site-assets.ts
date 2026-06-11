@@ -10,7 +10,7 @@ export const siteAssets = {
     ctaCosmic: "/assets/misc/cta-cosmic.webp",
   },
   navbar: {
-    logo: "/assets/navbar/site-logo.png",
+    logo: "/website%20logo/website%20logo.webp",
   },
   icons: {
     xLogo: "/assets/icons/x-logo.webp",

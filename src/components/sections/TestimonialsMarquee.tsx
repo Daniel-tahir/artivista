@@ -2,12 +2,12 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { motion, useMotionValue } from "framer-motion";
 import { reviewImages } from "@/generated/review-images";
 
+type ReviewImage = string;
+
 const allImages: ReviewImage[] = [...reviewImages];
 
 const columnA: ReviewImage[] = [...allImages];
 const columnB: ReviewImage[] = [...allImages].reverse();
-
-type ReviewImage = string;
 
 const ImageCard = ({ src }: { src: string }) => (
   <div className="mb-4 overflow-hidden rounded-[1.25rem] bg-white shadow-[0_4px_24px_-8px_rgba(0,0,0,0.10),0_1px_4px_-2px_rgba(0,0,0,0.06)] last:mb-0">
@@ -56,6 +56,7 @@ function useMarquee(initialDirection: 1 | -1, isVisible: boolean) {
   const isHoveredRef = useRef(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const [singleSetHeight, setSingleSetHeight] = useState(0);
+  const singleSetHeightRef = useRef(0);
   const dirRef = useRef(initialDirection);
   const lowerRef = useRef(0);
   const upperRef = useRef(0);
@@ -67,25 +68,38 @@ function useMarquee(initialDirection: 1 | -1, isVisible: boolean) {
   }, [isHovered]);
 
   useEffect(() => {
-    if (singleSetHeight === 0) return;
+    if (singleSetHeightRef.current === 0) return;
     if (initialDirection === 1) {
       lowerRef.current = 0;
-      upperRef.current = singleSetHeight;
+      upperRef.current = singleSetHeightRef.current;
     } else {
-      lowerRef.current = -singleSetHeight;
+      lowerRef.current = -singleSetHeightRef.current;
       upperRef.current = 0;
     }
   }, [singleSetHeight, initialDirection]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const el = contentRef.current;
-    if (el) {
-      setSingleSetHeight(el.scrollHeight / 2);
-    }
+    if (!el) return;
+
+    const measure = () => {
+      const h = el.scrollHeight / 2;
+      if (h > 0 && h !== singleSetHeightRef.current) {
+        singleSetHeightRef.current = h;
+        setSingleSetHeight(h);
+      }
+    };
+
+    measure();
+
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+
+    return () => ro.disconnect();
   }, []);
 
   useEffect(() => {
-    if (!isVisible || singleSetHeight === 0) return;
+    if (!isVisible || singleSetHeightRef.current === 0) return;
 
     const tick = (now: number) => {
       if (lastTimeRef.current === null) {
@@ -124,7 +138,7 @@ function useMarquee(initialDirection: 1 | -1, isVisible: boolean) {
       }
       lastTimeRef.current = null;
     };
-  }, [isVisible, singleSetHeight, y]);
+  }, [isVisible, y]);
 
   return { y, contentRef, setIsHovered };
 }
@@ -154,7 +168,7 @@ const MarqueeColumn = ({
       <div ref={contentRef}>
         <motion.div style={{ y }} className="will-change-transform">
           {[...images, ...images].map((src, i) => (
-            <ImageCard key={`${i}`} src={src} />
+            <ImageCard key={`${src}-${i}`} src={src} />
           ))}
         </motion.div>
       </div>
@@ -216,7 +230,7 @@ const TestimonialsMarquee = () => {
 
             <div className="divider-glow w-48" />
 
-            <div className="grid grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-3 gap-10 md:gap-8">
               <div>
                 <p className="text-3xl font-bold text-white md:text-4xl">
                   {reviewsCount}

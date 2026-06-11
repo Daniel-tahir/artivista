@@ -403,5 +403,26 @@
     box-shadow: 0 14px 28px -24px rgb(5 8 20 / 0.5);
     transform: translateY(0) scale(0.992);
   }
+}
 
+@keyframes scroll-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.scroll-col-inner {
+  animation: scroll-up 15s linear infinite;
+}
+
+.scroll-col-inner--slower {
+  animation: scroll-up 20s linear infinite;
+}
+
+.scroll-col:hover .scroll-col-inner,
+.scroll-col:hover .scroll-col-inner--slower {
+  animation-play-state: paused;
 }
