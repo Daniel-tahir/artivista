@@ -10,6 +10,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Index = lazy(() => import("./pages/Index.tsx"));
 const About = lazy(() => import("./pages/About.tsx"));
+const BlogIndex = lazy(() => import("./pages/BlogIndex.tsx"));
+const BlogPost = lazy(() => import("./pages/BlogPost.tsx"));
 const ArtworkCategoryPage = lazy(() => import("./pages/ArtworkCategoryPage.tsx"));
 const AdminDashboardPage = lazy(() => import("./pages/admin/AdminDashboardPage.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
@@ -28,6 +30,8 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
+              <Route path="/blog" element={<BlogIndex />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/artwork/:slug" element={<ArtworkCategoryPage />} />
               <Route path="/admin" element={<AdminDashboardPage />} />
               <Route path="/not-found" element={<NotFound />} />

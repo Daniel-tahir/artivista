@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { syncArtworkManifests } from "./scripts/sync-artwork-manifests.mjs";
+import { generateSitemap } from "./scripts/generate-sitemap.mjs";
 
 const artworkRoot = path.resolve(__dirname, "./public/assets/artwork");
 
@@ -62,7 +63,15 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
-  plugins: [artworkManifestPlugin(), react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [
+    artworkManifestPlugin(),
+    react(),
+    mode === "development" && componentTagger(),
+    {
+      name: "sitemap-generator",
+      closeBundle: generateSitemap,
+    },
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
