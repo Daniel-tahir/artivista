@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
-import type { BlogPost } from "@/content/blog/posts";
+import type { Blog } from "@/types/content";
 
 interface BlogCardProps {
-  post: BlogPost;
+  post: Blog;
+  index?: number;
 }
 
 const gradientColors = [
@@ -18,8 +19,27 @@ function getGradient(index: number) {
   return gradientColors[index % gradientColors.length];
 }
 
-const BlogCard = ({ post, index = 0 }: BlogCardProps & { index?: number }) => {
+function estimateReadingTime(content: string): number {
+  const text = content.replace(/<[^>]*>/g, "");
+  const words = text.split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 200));
+}
+
+function formatDate(dateStr: string): string {
+  try {
+    return new Date(dateStr).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return dateStr;
+  }
+}
+
+const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
   const gradient = getGradient(index);
+  const readingTime = estimateReadingTime(post.content);
 
   return (
     <Link
@@ -40,7 +60,7 @@ const BlogCard = ({ post, index = 0 }: BlogCardProps & { index?: number }) => {
           className={`flex aspect-[16/9] items-end bg-gradient-to-br ${gradient} p-5`}
         >
           <div className="flex flex-wrap gap-2">
-            {post.tags.map((tag) => (
+            {post.tags?.slice(0, 3).map((tag) => (
               <span
                 key={tag}
                 className="rounded-full bg-black/40 px-3 py-1 text-[11px] font-medium uppercase tracking-wider text-white/90 backdrop-blur-sm"
@@ -56,15 +76,11 @@ const BlogCard = ({ post, index = 0 }: BlogCardProps & { index?: number }) => {
         <div className="flex items-center gap-4 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-1.5">
             <Calendar className="h-3.5 w-3.5" />
-            {new Date(post.publishedAt).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
+            {formatDate(post.publishedAt || post.createdAt)}
           </span>
           <span className="inline-flex items-center gap-1.5">
             <Clock className="h-3.5 w-3.5" />
-            {post.readingTime} min read
+            {readingTime} min read
           </span>
         </div>
 

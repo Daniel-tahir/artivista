@@ -60,10 +60,28 @@ export interface Blog {
   featured: boolean;
   metaTitle: string;
   metaDescription: string;
+  ogTitle: string;
+  ogDescription: string;
+  ogImage: string;
+  focusKeyword: string;
+  canonicalUrl: string;
+  categoryId: string;
+  scheduledAt: string;
   views: number;
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
+  tags: string[];
+  categoryName?: string;
+}
+
+export interface BlogCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface FeedbackEntry {

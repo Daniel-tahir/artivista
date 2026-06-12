@@ -1,8 +1,48 @@
-import { blogPosts } from "@/content/blog/posts";
+import { useBlogs } from "@/hooks/useBlogs";
+import { blogPosts as localPosts } from "@/content/blog/posts";
 import BlogCard from "@/components/blog/BlogCard";
 import SeoHead from "@/components/SeoHead";
+import type { Blog } from "@/types/content";
+
+function mapLocalToBlog(local: typeof localPosts[number], index: number): Blog {
+  return {
+    id: `local-${index}`,
+    title: local.title,
+    slug: local.slug,
+    excerpt: local.excerpt,
+    content: local.content,
+    coverImage: local.coverImage,
+    authorId: local.author,
+    published: true,
+    featured: false,
+    metaTitle: local.metaTitle,
+    metaDescription: local.metaDescription,
+    ogTitle: local.metaTitle,
+    ogDescription: local.metaDescription,
+    ogImage: "",
+    focusKeyword: "",
+    canonicalUrl: "",
+    categoryId: "",
+    scheduledAt: "",
+    views: 0,
+    createdAt: local.publishedAt,
+    updatedAt: local.publishedAt,
+    publishedAt: local.publishedAt,
+    tags: local.tags,
+  };
+}
 
 const BlogIndex = () => {
+  const { data: remotePosts, isLoading } = useBlogs();
+
+  let displayPosts: Blog[] = [];
+
+  if (remotePosts && remotePosts.length > 0) {
+    displayPosts = remotePosts;
+  } else if (!isLoading) {
+    displayPosts = localPosts.map(mapLocalToBlog);
+  }
+
   return (
     <>
       <SeoHead
@@ -31,14 +71,20 @@ const BlogIndex = () => {
           </div>
 
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {blogPosts.map((post, i) => (
-              <BlogCard key={post.slug} post={post} index={i} />
+            {displayPosts.map((post) => (
+              <BlogCard key={post.id} post={post} />
             ))}
           </div>
 
-          {blogPosts.length === 0 && (
+          {displayPosts.length === 0 && !isLoading && (
             <div className="mt-20 text-center text-muted-foreground">
               <p className="text-lg">No posts yet. Check back soon!</p>
+            </div>
+          )}
+
+          {isLoading && (
+            <div className="mt-20 flex justify-center">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
             </div>
           )}
         </div>

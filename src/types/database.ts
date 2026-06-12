@@ -130,6 +130,33 @@ export interface Database {
         };
         Relationships: [];
       };
+      blog_categories: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          description: string;
+          created_at: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          slug: string;
+          description?: string;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          slug?: string;
+          description?: string;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Relationships: [];
+      };
       blogs: {
         Row: {
           id: string;
@@ -143,6 +170,13 @@ export interface Database {
           featured: boolean | null;
           meta_title: string | null;
           meta_description: string | null;
+          og_title: string | null;
+          og_description: string | null;
+          og_image: string | null;
+          focus_keyword: string | null;
+          canonical_url: string | null;
+          category_id: string | null;
+          scheduled_at: string | null;
           views: number | null;
           created_at: string | null;
           updated_at: string | null;
@@ -160,6 +194,13 @@ export interface Database {
           featured?: boolean | null;
           meta_title?: string | null;
           meta_description?: string | null;
+          og_title?: string | null;
+          og_description?: string | null;
+          og_image?: string | null;
+          focus_keyword?: string | null;
+          canonical_url?: string | null;
+          category_id?: string | null;
+          scheduled_at?: string | null;
           views?: number | null;
           created_at?: string | null;
           updated_at?: string | null;
@@ -177,6 +218,13 @@ export interface Database {
           featured?: boolean | null;
           meta_title?: string | null;
           meta_description?: string | null;
+          og_title?: string | null;
+          og_description?: string | null;
+          og_image?: string | null;
+          focus_keyword?: string | null;
+          canonical_url?: string | null;
+          category_id?: string | null;
+          scheduled_at?: string | null;
           views?: number | null;
           created_at?: string | null;
           updated_at?: string | null;
