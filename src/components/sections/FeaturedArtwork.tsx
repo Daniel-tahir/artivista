@@ -94,8 +94,6 @@ const FeaturedArtwork = () => {
               },
             }}
             watchOverflow
-            preloadImages={false}
-            lazyPreloadPrevNext={1}
             className="featured-artwork-swiper"
           >
             {showcaseArtworks.map((artwork) => (

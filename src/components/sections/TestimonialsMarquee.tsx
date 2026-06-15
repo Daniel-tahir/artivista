@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue } from "framer-motion";
 import { reviewImages } from "@/generated/review-images";
 
@@ -6,8 +6,21 @@ type ReviewImage = string;
 
 const allImages: ReviewImage[] = [...reviewImages];
 
-const columnA: ReviewImage[] = [...allImages];
-const columnB: ReviewImage[] = [...allImages].reverse();
+function balanceArrays<T>(a: readonly T[], b: readonly T[]): [T[], T[]] {
+  if (a.length === b.length) return [[...a], [...b]];
+  const [shorter, longer] =
+    a.length < b.length ? [a, b] : [b, a];
+  const padded: T[] = [];
+  for (let i = 0; i < longer.length; i++) {
+    padded.push(shorter[i % shorter.length]);
+  }
+  return a.length < b.length ? [padded, [...b]] : [[...a], padded];
+}
+
+const [columnA, columnB] = balanceArrays(
+  [...allImages],
+  [...allImages].reverse(),
+);
 
 const ImageCard = ({ src }: { src: string }) => (
   <div className="mb-4 overflow-hidden rounded-[1.25rem] bg-white shadow-[0_4px_24px_-8px_rgba(0,0,0,0.10),0_1px_4px_-2px_rgba(0,0,0,0.06)] last:mb-0">
@@ -50,6 +63,18 @@ function useCountUp(target: number, suffix: string, shouldStart: boolean) {
   return display;
 }
 
+function usePrefersReducedMotion(): boolean {
+  const [prefersReduced, setPrefersReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReduced(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReduced(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return prefersReduced;
+}
+
 function useMarquee(initialDirection: 1 | -1, isVisible: boolean) {
   const y = useMotionValue(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -58,25 +83,14 @@ function useMarquee(initialDirection: 1 | -1, isVisible: boolean) {
   const [singleSetHeight, setSingleSetHeight] = useState(0);
   const singleSetHeightRef = useRef(0);
   const dirRef = useRef(initialDirection);
-  const lowerRef = useRef(0);
-  const upperRef = useRef(0);
+  const positionRef = useRef(0);
   const rafRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     isHoveredRef.current = isHovered;
   }, [isHovered]);
-
-  useEffect(() => {
-    if (singleSetHeightRef.current === 0) return;
-    if (initialDirection === 1) {
-      lowerRef.current = 0;
-      upperRef.current = singleSetHeightRef.current;
-    } else {
-      lowerRef.current = -singleSetHeightRef.current;
-      upperRef.current = 0;
-    }
-  }, [singleSetHeight, initialDirection]);
 
   useEffect(() => {
     const el = contentRef.current;
@@ -98,8 +112,18 @@ function useMarquee(initialDirection: 1 | -1, isVisible: boolean) {
     return () => ro.disconnect();
   }, []);
 
+  // Left column (dir=1, scrolls down): start at -h, move toward 0, wrap at 0
+  // Right column (dir=-1, scrolls up): start at 0, move toward -h, wrap at -h
   useEffect(() => {
-    if (!isVisible || singleSetHeightRef.current === 0) return;
+    if (singleSetHeightRef.current === 0) return;
+    if (dirRef.current === 1) {
+      positionRef.current = -singleSetHeightRef.current;
+      y.set(positionRef.current);
+    }
+  }, [singleSetHeight, initialDirection, y]);
+
+  useEffect(() => {
+    if (!isVisible || prefersReducedMotion) return;
 
     const tick = (now: number) => {
       if (lastTimeRef.current === null) {
@@ -111,19 +135,24 @@ function useMarquee(initialDirection: 1 | -1, isVisible: boolean) {
       const delta = now - lastTimeRef.current;
       lastTimeRef.current = now;
 
-      if (!isHoveredRef.current) {
-        const current = y.get();
-        const next = current + delta * 0.038 * dirRef.current;
+      if (!isHoveredRef.current && singleSetHeightRef.current > 0) {
+        const h = singleSetHeightRef.current;
 
-        if (dirRef.current === 1 && next >= upperRef.current) {
-          y.set(upperRef.current);
-          dirRef.current = -1;
-        } else if (dirRef.current === -1 && next <= lowerRef.current) {
-          y.set(lowerRef.current);
-          dirRef.current = 1;
+        if (dirRef.current === 1) {
+          // Scroll down: position increases, wraps at 0 → -h
+          positionRef.current += delta * 0.038;
+          if (positionRef.current >= 0) {
+            positionRef.current = -h;
+          }
         } else {
-          y.set(next);
+          // Scroll up: position decreases, wraps at -h → 0
+          positionRef.current -= delta * 0.038;
+          if (positionRef.current <= -h) {
+            positionRef.current = 0;
+          }
         }
+
+        y.set(positionRef.current);
       }
 
       rafRef.current = requestAnimationFrame(tick);
@@ -138,7 +167,7 @@ function useMarquee(initialDirection: 1 | -1, isVisible: boolean) {
       }
       lastTimeRef.current = null;
     };
-  }, [isVisible, y]);
+  }, [isVisible, singleSetHeight, prefersReducedMotion, y]);
 
   return { y, contentRef, setIsHovered };
 }
