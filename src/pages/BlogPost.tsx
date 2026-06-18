@@ -3,12 +3,9 @@ import { useParams, Link } from "react-router-dom";
 import {
   Calendar, Clock, ArrowLeft, ChevronRight, User,
 } from "lucide-react";
-import { blogPosts, getBlogPost, getRelatedPosts } from "@/content/blog/posts";
-import { fetchBlogBySlug } from "@/services/blogs/blog.service";
-import BlogCard from "@/components/blog/BlogCard";
+import { fetchBlogBySlug, incrementBlogViews } from "@/services/blogs/blog.service";
 import SeoHead from "@/components/SeoHead";
 import type { Blog } from "@/types/content";
-import type { BlogPost as LocalPost } from "@/content/blog/posts";
 
 const gradientColors = [
   "from-violet-600/40 via-fuchsia-600/30 to-blue-600/40",
@@ -18,9 +15,16 @@ const gradientColors = [
   "from-emerald-600/40 via-teal-600/30 to-cyan-600/40",
 ];
 
+function hashSlug(slug: string): number {
+  let hash = 0;
+  for (let i = 0; i < slug.length; i++) {
+    hash = ((hash << 5) - hash + slug.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash);
+}
+
 function getGradient(slug: string) {
-  const idx = blogPosts.findIndex((p) => p.slug === slug);
-  return gradientColors[Math.max(0, idx % gradientColors.length)];
+  return gradientColors[hashSlug(slug) % gradientColors.length];
 }
 
 function estimateReadingTime(content: string): number {
@@ -50,41 +54,7 @@ function formatDate(dateStr: string): string {
   }
 }
 
-interface ResolvedPost {
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  coverImage: string;
-  tags: string[];
-  publishedAt: string;
-  author: string;
-  authorRole?: string;
-  faqs?: { question: string; answer: string }[];
-  metaTitle: string;
-  metaDescription: string;
-  authorInitial?: string;
-}
-
-function localToResolved(local: LocalPost): ResolvedPost {
-  return {
-    title: local.title,
-    slug: local.slug,
-    excerpt: local.excerpt,
-    content: local.content,
-    coverImage: local.coverImage,
-    tags: local.tags,
-    publishedAt: local.publishedAt,
-    author: local.author,
-    authorRole: local.authorRole,
-    faqs: local.faqs,
-    metaTitle: local.metaTitle,
-    metaDescription: local.metaDescription,
-    authorInitial: "A",
-  };
-}
-
-function remoteToResolved(remote: Blog): ResolvedPost {
+function remoteToResolved(remote: Blog) {
   return {
     title: remote.title,
     slug: remote.slug,
@@ -96,13 +66,12 @@ function remoteToResolved(remote: Blog): ResolvedPost {
     author: "ARTIVISTAA",
     metaTitle: remote.metaTitle || remote.title,
     metaDescription: remote.metaDescription || remote.excerpt.slice(0, 160),
-    authorInitial: "A",
   };
 }
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [post, setPost] = useState<ResolvedPost | null>(null);
+  const [post, setPost] = useState<ReturnType<typeof remoteToResolved> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -111,30 +80,22 @@ const BlogPost = () => {
       return;
     }
 
-    const local = getBlogPost(slug);
-    if (local) {
-      setPost(localToResolved(local));
-      setLoading(false);
-      return;
-    }
-
     fetchBlogBySlug(slug)
       .then((remote) => {
+        console.log("Fetched Blog By Slug:", remote);
         if (remote) {
           setPost(remoteToResolved(remote));
+          incrementBlogViews(remote.id).catch(() => {});
         } else {
           setPost(null);
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log("Blog Fetch Error:", err);
         setPost(null);
       })
       .finally(() => setLoading(false));
   }, [slug]);
-
-  const relatedPosts = post
-    ? getRelatedPosts(post.slug).map(localToResolved)
-    : [];
 
   const toc = post ? extractToc(post.content) : [];
   const baseUrl = window.location.origin;
@@ -190,21 +151,7 @@ const BlogPost = () => {
     mainEntityOfPage: { "@type": "WebPage", "@id": window.location.href },
   };
 
-  const faqJsonLd = post.faqs?.length
-    ? {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        mainEntity: post.faqs.map((faq) => ({
-          "@type": "Question",
-          name: faq.question,
-          acceptedAnswer: { "@type": "Answer", text: faq.answer },
-        })),
-      }
-    : null;
-
-  const graphItems = faqJsonLd
-    ? [breadcrumbJsonLd, articleJsonLd, faqJsonLd]
-    : [breadcrumbJsonLd, articleJsonLd];
+  const graphItems = [breadcrumbJsonLd, articleJsonLd];
 
   return (
     <>
@@ -284,15 +231,10 @@ const BlogPost = () => {
               <div className="mt-12 rounded-2xl border border-white/10 bg-white/[0.04] p-6 md:p-8">
                 <div className="flex items-start gap-4">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-neon-cyan/20">
-                    <span className="font-display text-xl font-bold text-primary">
-                      {post.authorInitial || "A"}
-                    </span>
+                    <span className="font-display text-xl font-bold text-primary">A</span>
                   </div>
                   <div>
                     <div className="font-display text-lg font-bold text-foreground">{post.author}</div>
-                    {post.authorRole && (
-                      <div className="text-sm text-muted-foreground">{post.authorRole}</div>
-                    )}
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                       ARTIVISTAA specializes in custom fantasy, anime, and D&D character art.
                       Every design is crafted with attention to detail, storytelling, and artistic excellence.
@@ -300,25 +242,6 @@ const BlogPost = () => {
                   </div>
                 </div>
               </div>
-
-              {post.faqs && post.faqs.length > 0 && (
-                <div className="mt-10">
-                  <h2 className="font-display text-2xl font-bold text-glow mb-6">Frequently Asked Questions</h2>
-                  <div className="space-y-4">
-                    {post.faqs.map((faq, i) => (
-                      <details key={i} className="group rounded-2xl border border-white/10 bg-white/[0.04] transition-colors hover:border-white/20">
-                        <summary className="flex cursor-pointer items-center justify-between p-5 text-sm font-semibold text-foreground">
-                          {faq.question}
-                          <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-90" />
-                        </summary>
-                        <div className="border-t border-white/10 px-5 pb-5 pt-3 text-sm leading-relaxed text-muted-foreground">
-                          {faq.answer}
-                        </div>
-                      </details>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
 
             <aside className="hidden lg:block">
@@ -354,45 +277,7 @@ const BlogPost = () => {
             </div>
           )}
 
-          {relatedPosts.length > 0 && (
-            <section className="mt-20">
-              <h2 className="font-display text-2xl font-bold text-glow mb-8">Related Posts</h2>
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {relatedPosts.map((related, i) => (
-                  <div key={related.slug}>
-                    <BlogCard
-                      post={{
-                        id: related.slug,
-                        title: related.title,
-                        slug: related.slug,
-                        excerpt: related.excerpt,
-                        content: related.content,
-                        coverImage: related.coverImage,
-                        tags: related.tags,
-                        publishedAt: related.publishedAt,
-                        createdAt: related.publishedAt,
-                        updatedAt: related.publishedAt,
-                        authorId: related.author,
-                        published: true,
-                        featured: false,
-                        metaTitle: related.metaTitle,
-                        metaDescription: related.metaDescription,
-                        categoryId: "",
-                        ogTitle: "",
-                        ogDescription: "",
-                        ogImage: "",
-                        focusKeyword: "",
-                        canonicalUrl: "",
-                        scheduledAt: "",
-                        views: 0,
-                      }}
-                      index={i + 3}
-                    />
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
+
 
           <section className="mt-20 rounded-3xl border border-white/10 bg-gradient-to-br from-primary/5 via-neon-cyan/[0.03] to-neon-magenta/[0.05] p-8 text-center md:p-16">
             <h2 className="font-display text-3xl font-bold text-glow sm:text-4xl">Ready to Bring Your Character to Life?</h2>

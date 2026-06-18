@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useMotionValue } from "framer-motion";
-import { reviewImages } from "@/generated/review-images";
+import { getReviewImages } from "@/services/reviews/review.service";
 
 type ReviewImage = string;
-
-const allImages: ReviewImage[] = [...reviewImages];
 
 function balanceArrays<T>(a: readonly T[], b: readonly T[]): [T[], T[]] {
   if (a.length === b.length) return [[...a], [...b]];
@@ -16,11 +14,6 @@ function balanceArrays<T>(a: readonly T[], b: readonly T[]): [T[], T[]] {
   }
   return a.length < b.length ? [padded, [...b]] : [[...a], padded];
 }
-
-const [columnA, columnB] = balanceArrays(
-  [...allImages],
-  [...allImages].reverse(),
-);
 
 const ImageCard = ({ src }: { src: string }) => (
   <div className="mb-4 overflow-hidden rounded-[1.25rem] bg-white shadow-[0_4px_24px_-8px_rgba(0,0,0,0.10),0_1px_4px_-2px_rgba(0,0,0,0.06)] last:mb-0">
@@ -210,8 +203,32 @@ const TestimonialsMarquee = () => {
   const [isSectionVisible, setIsSectionVisible] = useState(false);
   const [countersStarted, setCountersStarted] = useState(false);
   const countersStartedRef = useRef(false);
+  const [images, setImages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const hasImages = allImages.length > 0;
+  useEffect(() => {
+    const abort = new AbortController();
+
+    getReviewImages()
+      .then((data) => {
+        if (!abort.signal.aborted) {
+          setImages(data);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!abort.signal.aborted) setLoading(false);
+      });
+
+    return () => abort.abort();
+  }, []);
+
+  const [columnA, columnB] = useMemo(
+    () => balanceArrays([...images], [...images].reverse()),
+    [images],
+  );
+
+  const hasImages = images.length > 0;
 
   const reviewsCount = useCountUp(300, "+", countersStarted);
   const customersCount = useCountUp(500, "+", countersStarted);
@@ -288,7 +305,11 @@ const TestimonialsMarquee = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-4 md:gap-6">
-            {hasImages ? (
+            {loading ? (
+              <p className="col-span-2 text-center text-sm text-muted-foreground">
+                Loading reviews...
+              </p>
+            ) : hasImages ? (
               <>
                 <MarqueeColumn
                   images={columnA}
@@ -303,8 +324,7 @@ const TestimonialsMarquee = () => {
               </>
             ) : (
               <p className="col-span-2 text-center text-sm text-muted-foreground">
-                Add screenshots to <code>public/review-section/</code> and run
-                the dev server to see them here.
+                No review images available yet.
               </p>
             )}
           </div>

@@ -47,7 +47,12 @@ const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
       className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-[0_0_40px_hsl(var(--primary)/0.15)]"
     >
       {post.coverImage ? (
-        <div className="aspect-[16/9] overflow-hidden">
+        <div className="relative aspect-[16/9] overflow-hidden">
+          {post.featured && (
+            <div className="absolute right-2 top-2 z-10 rounded-full border border-amber-400/30 bg-amber-400/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.25)] backdrop-blur-sm">
+              ★ Featured
+            </div>
+          )}
           <img
             src={post.coverImage}
             alt={post.title}
@@ -57,8 +62,13 @@ const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
         </div>
       ) : (
         <div
-          className={`flex aspect-[16/9] items-end bg-gradient-to-br ${gradient} p-5`}
+          className={`relative flex aspect-[16/9] items-end bg-gradient-to-br ${gradient} p-5`}
         >
+          {post.featured && (
+            <div className="absolute right-2 top-2 z-10 rounded-full border border-amber-400/30 bg-amber-400/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.25)] backdrop-blur-sm">
+              ★ Featured
+            </div>
+          )}
           <div className="flex flex-wrap gap-2">
             {post.tags?.slice(0, 3).map((tag) => (
               <span

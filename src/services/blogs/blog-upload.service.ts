@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 
-const BLOG_BUCKET = "blog-images";
+const BLOG_BUCKET = "blogs-images";
 
 const SAFE_TYPES = new Set(["image/png", "image/jpeg", "image/webp", "image/gif"]);
 

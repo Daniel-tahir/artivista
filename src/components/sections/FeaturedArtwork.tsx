@@ -100,14 +100,14 @@ const FeaturedArtwork = () => {
               <SwiperSlide key={artwork.id} className="featured-artwork-slide">
                 <Link
                   to={`/artwork/${artwork.category}`}
-                  aria-label={`Open ${artwork.title} artwork page`}
+                  aria-label={`Open ${artwork.categoryName} category`}
                   className="block"
                 >
                   <article className="interactive-surface group overflow-hidden rounded-3xl border border-white/12 bg-white/[0.04] shadow-[0_22px_60px_-28px_rgba(15,23,42,0.95)] backdrop-blur-xl hover:-translate-y-1">
                     <div className="relative aspect-[3/4] overflow-hidden rounded-3xl">
                       <img
                         src={artwork.image}
-                        alt={artwork.title}
+                        alt={artwork.categoryName}
                         loading="lazy"
                         decoding="async"
                         width={768}
@@ -123,7 +123,7 @@ const FeaturedArtwork = () => {
                         </p>
 
                         <h3 className="font-display text-xl font-semibold tracking-[-0.03em] text-white drop-shadow-[0_10px_35px_rgba(0,0,0,0.35)] md:text-[1.7rem]">
-                          {artwork.title}
+                          {artwork.categoryName}
                         </h3>
                       </div>
                     </div>

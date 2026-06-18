@@ -130,33 +130,6 @@ export interface Database {
         };
         Relationships: [];
       };
-      blog_categories: {
-        Row: {
-          id: string;
-          name: string;
-          slug: string;
-          description: string;
-          created_at: string | null;
-          updated_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          name: string;
-          slug: string;
-          description?: string;
-          created_at?: string | null;
-          updated_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          name?: string;
-          slug?: string;
-          description?: string;
-          created_at?: string | null;
-          updated_at?: string | null;
-        };
-        Relationships: [];
-      };
       blogs: {
         Row: {
           id: string;
@@ -170,13 +143,6 @@ export interface Database {
           featured: boolean | null;
           meta_title: string | null;
           meta_description: string | null;
-          og_title: string | null;
-          og_description: string | null;
-          og_image: string | null;
-          focus_keyword: string | null;
-          canonical_url: string | null;
-          category_id: string | null;
-          scheduled_at: string | null;
           views: number | null;
           created_at: string | null;
           updated_at: string | null;
@@ -194,13 +160,6 @@ export interface Database {
           featured?: boolean | null;
           meta_title?: string | null;
           meta_description?: string | null;
-          og_title?: string | null;
-          og_description?: string | null;
-          og_image?: string | null;
-          focus_keyword?: string | null;
-          canonical_url?: string | null;
-          category_id?: string | null;
-          scheduled_at?: string | null;
           views?: number | null;
           created_at?: string | null;
           updated_at?: string | null;
@@ -218,13 +177,6 @@ export interface Database {
           featured?: boolean | null;
           meta_title?: string | null;
           meta_description?: string | null;
-          og_title?: string | null;
-          og_description?: string | null;
-          og_image?: string | null;
-          focus_keyword?: string | null;
-          canonical_url?: string | null;
-          category_id?: string | null;
-          scheduled_at?: string | null;
           views?: number | null;
           created_at?: string | null;
           updated_at?: string | null;
@@ -295,6 +247,63 @@ export interface Database {
           artwork_id?: string | null;
           content?: string;
           created_at?: string | null;
+        };
+        Relationships: [];
+      };
+      review_categories: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          created_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          slug: string;
+          created_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          slug?: string;
+          created_at?: string | null;
+        };
+        Relationships: [];
+      };
+      review_images: {
+        Row: {
+          id: string;
+          image_url: string;
+          alt_text: string | null;
+          category: string | null;
+          position: number | null;
+          is_active: boolean | null;
+          created_at: string | null;
+          category_id: string | null;
+          column_side: string | null;
+        };
+        Insert: {
+          id?: string;
+          image_url: string;
+          alt_text?: string | null;
+          category?: string | null;
+          position?: number | null;
+          is_active?: boolean | null;
+          created_at?: string | null;
+          category_id?: string | null;
+          column_side?: string | null;
+        };
+        Update: {
+          id?: string;
+          image_url?: string;
+          alt_text?: string | null;
+          category?: string | null;
+          position?: number | null;
+          is_active?: boolean | null;
+          created_at?: string | null;
+          category_id?: string | null;
+          column_side?: string | null;
         };
         Relationships: [];
       };

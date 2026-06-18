@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Shield, Sparkles, Database, Wand2, ArrowLeft, FileText } from "lucide-react";
+import { Shield, Sparkles, Database, Wand2, ArrowLeft, FileText, Images } from "lucide-react";
 import { Link } from "react-router-dom";
 import SiteFooter from "@/components/SiteFooter";
 import StarField from "@/components/StarField";
@@ -116,6 +116,32 @@ const AdminDashboardPage = () => {
                 </div>
                 <div className="hidden text-sm font-medium text-primary sm:block">
                   Manage Blogs →
+                </div>
+              </div>
+            </Link>
+          </div>
+        </section>
+
+        <section className="px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            <Link
+              to="/admin/testimonials"
+              className="group relative block overflow-hidden rounded-[2rem] border border-white/10 bg-gradient-to-br from-primary/5 via-neon-cyan/[0.03] to-neon-magenta/[0.05] px-6 py-8 transition-all duration-300 hover:border-primary/30 hover:shadow-[0_0_40px_hsl(var(--primary)/0.15)] sm:px-8 lg:px-10"
+            >
+              <div className="relative flex items-center gap-6">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
+                  <Images className="h-7 w-7 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <div className="font-display text-xl font-bold text-glow group-hover:text-primary transition-colors">
+                    Testimonials Manager
+                  </div>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Upload and manage testimonial screenshots for the frontend marquee display.
+                  </p>
+                </div>
+                <div className="hidden text-sm font-medium text-primary sm:block">
+                  Manage Images →
                 </div>
               </div>
             </Link>

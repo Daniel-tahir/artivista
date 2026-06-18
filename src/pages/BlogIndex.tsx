@@ -1,47 +1,13 @@
 import { useBlogs } from "@/hooks/useBlogs";
-import { blogPosts as localPosts } from "@/content/blog/posts";
 import BlogCard from "@/components/blog/BlogCard";
 import SeoHead from "@/components/SeoHead";
-import type { Blog } from "@/types/content";
-
-function mapLocalToBlog(local: typeof localPosts[number], index: number): Blog {
-  return {
-    id: `local-${index}`,
-    title: local.title,
-    slug: local.slug,
-    excerpt: local.excerpt,
-    content: local.content,
-    coverImage: local.coverImage,
-    authorId: local.author,
-    published: true,
-    featured: false,
-    metaTitle: local.metaTitle,
-    metaDescription: local.metaDescription,
-    ogTitle: local.metaTitle,
-    ogDescription: local.metaDescription,
-    ogImage: "",
-    focusKeyword: "",
-    canonicalUrl: "",
-    categoryId: "",
-    scheduledAt: "",
-    views: 0,
-    createdAt: local.publishedAt,
-    updatedAt: local.publishedAt,
-    publishedAt: local.publishedAt,
-    tags: local.tags,
-  };
-}
+import { Skeleton } from "@/components/ui/skeleton";
 
 const BlogIndex = () => {
-  const { data: remotePosts, isLoading } = useBlogs();
+  const { data: remotePosts, isLoading, isError } = useBlogs();
 
-  let displayPosts: Blog[] = [];
-
-  if (remotePosts && remotePosts.length > 0) {
-    displayPosts = remotePosts;
-  } else if (!isLoading) {
-    displayPosts = localPosts.map(mapLocalToBlog);
-  }
+  console.log("Fetched Blogs:", remotePosts);
+  console.log("Blog Fetch Error:", isError);
 
   return (
     <>
@@ -70,21 +36,43 @@ const BlogIndex = () => {
             </p>
           </div>
 
-          <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {displayPosts.map((post) => (
-              <BlogCard key={post.id} post={post} />
-            ))}
-          </div>
-
-          {displayPosts.length === 0 && !isLoading && (
-            <div className="mt-20 text-center text-muted-foreground">
-              <p className="text-lg">No posts yet. Check back soon!</p>
+          {isLoading ? (
+            <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
+                  <Skeleton className="aspect-[16/9] w-full rounded-none bg-white/5" />
+                  <div className="space-y-3 p-5">
+                    <div className="flex gap-4">
+                      <Skeleton className="h-3 w-20 bg-white/5" />
+                      <Skeleton className="h-3 w-16 bg-white/5" />
+                    </div>
+                    <Skeleton className="h-5 w-3/4 bg-white/5" />
+                    <Skeleton className="h-4 w-full bg-white/5" />
+                    <Skeleton className="h-4 w-1/2 bg-white/5" />
+                    <Skeleton className="h-4 w-24 bg-white/5" />
+                  </div>
+                </div>
+              ))}
             </div>
-          )}
-
-          {isLoading && (
-            <div className="mt-20 flex justify-center">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary/30 border-t-primary" />
+          ) : isError ? (
+            <div className="mt-20 text-center text-muted-foreground">
+              <p className="text-lg">Unable to load blogs. Please try again later.</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="interactive-surface mt-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-6 py-3 text-sm text-foreground hover:bg-white/[0.08]"
+              >
+                Retry
+              </button>
+            </div>
+          ) : remotePosts && remotePosts.length > 0 ? (
+            <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {remotePosts.map((post) => (
+                <BlogCard key={post.id} post={post} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-20 text-center text-muted-foreground">
+              <p className="text-lg">No blogs available. Check back soon!</p>
             </div>
           )}
         </div>

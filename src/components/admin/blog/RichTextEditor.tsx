@@ -19,6 +19,7 @@ const RichTextEditor = ({ content, onChange, placeholder = "Start writing..." }:
     extensions: [
       StarterKit.configure({
         heading: { levels: [1, 2, 3] },
+        link: false,
       }),
       ImageExtension.configure({ inline: false }),
       LinkExtension.configure({ openOnClick: false }),

@@ -17,7 +17,7 @@ export const generatedArtworkCategories = [
     "subtitle": "A dedicated DND gallery presented with the site’s current fantasy atmosphere, layout rhythm, and responsive behavior.",
     "heroImage": "/assets/artwork/dnd/1f1f0f41-4c97-49b8-bf0d-203ba4588c09 2.webp",
     "featuredTitle": "Epic DnD Heroes",
-    "featuredImage": "/assets/featured/dnd/featured.webp"
+    "featuredImage": "/assets/artwork/dnd/1f1f0f41-4c97-49b8-bf0d-203ba4588c09 2.webp"
   },
   {
     "slug": "furry",
@@ -27,7 +27,7 @@ export const generatedArtworkCategories = [
     "subtitle": "A furry artwork gallery that inherits the current website theme, colors, spacing, and interaction language.",
     "heroImage": "/assets/artwork/furry/Dragonborn-bust-short.webp",
     "featuredTitle": "Furry Art",
-    "featuredImage": "/assets/featured/furry/featured.webp"
+    "featuredImage": "/assets/artwork/furry/Dragonborn-bust-short.webp"
   },
   {
     "slug": "anime",
@@ -37,7 +37,7 @@ export const generatedArtworkCategories = [
     "subtitle": "A focused anime category page using the same visual system and responsive structure already established on the site.",
     "heroImage": "/assets/artwork/anime/503806375_3006250609533451_2743823112020178685_n.webp",
     "featuredTitle": "Anime Characters",
-    "featuredImage": "/assets/featured/anime/featured.webp"
+    "featuredImage": "/assets/artwork/anime/503806375_3006250609533451_2743823112020178685_n.webp"
   },
   {
     "slug": "warhammer",
@@ -47,7 +47,7 @@ export const generatedArtworkCategories = [
     "subtitle": "A Warhammer category page designed to stay visually consistent with the current website without altering the existing design.",
     "heroImage": "/assets/artwork/warhammer/03b1a875-2c22-48c0-a558-c4402eba582a.webp",
     "featuredTitle": "Warhammer",
-    "featuredImage": "/assets/featured/warhammer/featured.webp"
+    "featuredImage": "/assets/artwork/warhammer/03b1a875-2c22-48c0-a558-c4402eba582a.webp"
   },
   {
     "slug": "group-art",
@@ -57,7 +57,7 @@ export const generatedArtworkCategories = [
     "subtitle": "A group-art gallery for multi-character scenes, built to match the current UI system and responsive grid behavior.",
     "heroImage": "/assets/artwork/group-art/2 character with bg final (2).webp",
     "featuredTitle": "Group Art",
-    "featuredImage": "/assets/featured/group-art/featured.webp"
+    "featuredImage": "/assets/artwork/group-art/2 character with bg final (2).webp"
   }
 ] as const satisfies ReadonlyArray<ArtworkCategorySummary>;
 
@@ -400,10 +400,6 @@ export const generatedArtworkManifests = {
         "image": "/assets/artwork/anime/Manga-riging.webp"
       },
       {
-        "title": "Manga",
-        "image": "/assets/artwork/anime/Manga.webp"
-      },
-      {
         "title": "Morgandy DeDannon (1)",
         "image": "/assets/artwork/anime/Morgandy-DeDannon-(1).webp"
       },
@@ -418,6 +414,10 @@ export const generatedArtworkManifests = {
       {
         "title": "Salem",
         "image": "/assets/artwork/anime/salem.webp"
+      },
+      {
+        "title": "Setaa",
+        "image": "/assets/artwork/anime/setaa.webp"
       },
       {
         "title": "Soft Girl",
@@ -498,8 +498,8 @@ export const generatedArtworkManifests = {
         "image": "/assets/artwork/group-art/2 character with bg final (2).webp"
       },
       {
-        "title": "Artboard 1 (1)",
-        "image": "/assets/artwork/group-art/Artboard 1 (1).webp"
+        "title": "Artboard 2(1)",
+        "image": "/assets/artwork/group-art/Artboard 2(1).webp"
       },
       {
         "title": "Gobllin",

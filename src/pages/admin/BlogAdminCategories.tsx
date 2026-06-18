@@ -1,18 +1,19 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import AdminBlogLayout from "@/components/admin/blog/AdminBlogLayout";
-import BlogCategoryManager from "@/components/admin/blog/BlogCategoryManager";
-import { useAdminBlogs } from "@/hooks/admin/use-admin-blogs";
 
 const BlogAdminCategories = () => {
-  const { categories, createCategory, updateCategory, deleteCategory } = useAdminBlogs();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/admin/blogs", { replace: true });
+  }, [navigate]);
 
   return (
     <AdminBlogLayout>
-      <BlogCategoryManager
-        categories={categories}
-        onCreate={createCategory}
-        onUpdate={(id, cat) => updateCategory({ id, cat })}
-        onDelete={deleteCategory}
-      />
+      <div className="flex items-center justify-center py-20 text-muted-foreground">
+        Redirecting...
+      </div>
     </AdminBlogLayout>
   );
 };

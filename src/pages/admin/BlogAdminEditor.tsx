@@ -7,7 +7,7 @@ const BlogAdminEditor = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: blog, isLoading } = useAdminBlog(id);
-  const { categories, createBlog, updateBlog } = useAdminBlogs();
+  const { createBlog, updateBlog } = useAdminBlogs();
   const isEdit = !!id;
 
   if (isEdit && isLoading) {
@@ -24,7 +24,6 @@ const BlogAdminEditor = () => {
     <AdminBlogLayout>
       <BlogPostForm
         blog={blog ?? null}
-        categories={categories}
         onSave={async (data) => {
           if (isEdit && id) {
             await updateBlog({ id, blog: data });

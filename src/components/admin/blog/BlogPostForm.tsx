@@ -6,12 +6,10 @@ import {
 import { toast } from "sonner";
 import RichTextEditor from "@/components/admin/blog/RichTextEditor";
 import { uploadBlogImage, deleteBlogImage } from "@/services/blogs/blog-upload.service";
-import type { Blog, BlogCategory } from "@/types/content";
-import type { useAdminBlogs } from "@/hooks/admin/use-admin-blogs";
+import type { Blog } from "@/types/content";
 
 interface BlogPostFormProps {
   blog?: Blog | null;
-  categories: BlogCategory[];
   onSave: (data: Partial<Blog> & { tags: string[] }) => Promise<void>;
 }
 
@@ -25,7 +23,7 @@ function slugify(text: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-const BlogPostForm = ({ blog, categories, onSave }: BlogPostFormProps) => {
+const BlogPostForm = ({ blog, onSave }: BlogPostFormProps) => {
   const navigate = useNavigate();
   const isEdit = !!blog;
 
@@ -34,17 +32,11 @@ const BlogPostForm = ({ blog, categories, onSave }: BlogPostFormProps) => {
   const [excerpt, setExcerpt] = useState(blog?.excerpt ?? "");
   const [content, setContent] = useState(blog?.content ?? "");
   const [coverImage, setCoverImage] = useState(blog?.coverImage ?? "");
-  const [categoryId, setCategoryId] = useState(blog?.categoryId ?? "");
   const [tagsInput, setTagsInput] = useState(blog?.tags?.join(", ") ?? "");
   const [published, setPublished] = useState(blog?.published ?? false);
   const [featured, setFeatured] = useState(blog?.featured ?? false);
   const [metaTitle, setMetaTitle] = useState(blog?.metaTitle ?? "");
   const [metaDescription, setMetaDescription] = useState(blog?.metaDescription ?? "");
-  const [ogTitle, setOgTitle] = useState(blog?.ogTitle ?? "");
-  const [ogDescription, setOgDescription] = useState(blog?.ogDescription ?? "");
-  const [ogImage, setOgImage] = useState(blog?.ogImage ?? "");
-  const [focusKeyword, setFocusKeyword] = useState(blog?.focusKeyword ?? "");
-  const [canonicalUrl, setCanonicalUrl] = useState(blog?.canonicalUrl ?? "");
   const [saving, setSaving] = useState(false);
   const [slugEdited, setSlugEdited] = useState(false);
 
@@ -77,20 +69,6 @@ const BlogPostForm = ({ blog, categories, onSave }: BlogPostFormProps) => {
     setCoverImage("");
   }, [coverImage]);
 
-  const handleOgUpload = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    try {
-      const url = await uploadBlogImage(file, slug || "untitled", "og");
-      if (blog?.ogImage) await deleteBlogImage(blog.ogImage);
-      setOgImage(url);
-      toast.success("OG image uploaded");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Upload failed");
-    }
-  }, [slug, blog?.ogImage]);
-
   const tags = tagsInput
     .split(",")
     .map((t) => t.trim())
@@ -114,16 +92,10 @@ const BlogPostForm = ({ blog, categories, onSave }: BlogPostFormProps) => {
         excerpt: excerpt.trim(),
         content,
         coverImage,
-        categoryId,
         published,
         featured,
         metaTitle: metaTitle || title,
         metaDescription: metaDescription || excerpt.slice(0, 160),
-        ogTitle: ogTitle || title,
-        ogDescription: ogDescription || excerpt.slice(0, 160),
-        ogImage,
-        focusKeyword,
-        canonicalUrl,
         tags,
       });
       toast.success(isEdit ? "Blog updated" : "Blog created");
@@ -307,25 +279,6 @@ const BlogPostForm = ({ blog, categories, onSave }: BlogPostFormProps) => {
             )}
           </div>
 
-          {/* Category */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
-            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              Category
-            </h3>
-            <select
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm text-foreground focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/30"
-            >
-              <option value="">Uncategorized</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
           {/* Tags */}
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-5">
             <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
@@ -359,7 +312,7 @@ const BlogPostForm = ({ blog, categories, onSave }: BlogPostFormProps) => {
         <h2 className="mb-6 font-display text-lg font-bold text-glow">
           SEO Settings
         </h2>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2">
           <div>
             <label className="mb-1.5 block text-sm font-medium text-foreground">
               Meta Title
@@ -384,86 +337,6 @@ const BlogPostForm = ({ blog, categories, onSave }: BlogPostFormProps) => {
               placeholder={excerpt.slice(0, 160) || "Auto from excerpt"}
               className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/30"
             />
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-foreground">
-              Focus Keyword
-            </label>
-            <input
-              type="text"
-              value={focusKeyword}
-              onChange={(e) => setFocusKeyword(e.target.value)}
-              placeholder="e.g., anime character design"
-              className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/30"
-            />
-          </div>
-
-          <div className="sm:col-span-2">
-            <label className="mb-1.5 block text-sm font-medium text-foreground">
-              Canonical URL
-            </label>
-            <input
-              type="text"
-              value={canonicalUrl}
-              onChange={(e) => setCanonicalUrl(e.target.value)}
-              placeholder={`https://artivistaa.com/blog/${slug}`}
-              className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/30"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-foreground">
-              Open Graph Title
-            </label>
-            <input
-              type="text"
-              value={ogTitle}
-              onChange={(e) => setOgTitle(e.target.value)}
-              placeholder={metaTitle || title || "Auto from meta title"}
-              className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/30"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-foreground">
-              Open Graph Description
-            </label>
-            <input
-              type="text"
-              value={ogDescription}
-              onChange={(e) => setOgDescription(e.target.value)}
-              placeholder={metaDescription || excerpt.slice(0, 160) || "Auto from meta description"}
-              className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/40 focus:outline-none focus:ring-1 focus:ring-primary/30"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-foreground">
-              Open Graph Image
-            </label>
-            {ogImage ? (
-              <div className="relative overflow-hidden rounded-xl">
-                <img src={ogImage} alt="OG" className="aspect-[1.91/1] w-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => setOgImage("")}
-                  className="absolute right-2 top-2 rounded-full bg-black/60 p-1 text-white hover:bg-black/80"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </div>
-            ) : (
-              <label className="flex cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-white/10 p-4 hover:border-primary/30">
-                <Upload className="h-5 w-5 text-muted-foreground" />
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp,image/gif"
-                  onChange={handleOgUpload}
-                  className="hidden"
-                />
-              </label>
-            )}
           </div>
         </div>
       </div>

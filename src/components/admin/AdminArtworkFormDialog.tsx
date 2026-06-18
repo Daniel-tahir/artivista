@@ -234,7 +234,7 @@ const AdminArtworkFormDialog = ({
         category: form.category,
         description: "",
         tags: "",
-        featured: false,
+        featured: form.featured,
         price: "",
         animeSeries: "",
         status: "queued" as const,
@@ -395,6 +395,14 @@ const AdminArtworkFormDialog = ({
                 {errors.category ? <p className="text-xs text-red-300">{errors.category}</p> : null}
               </div>
 
+              <div className="flex items-center justify-between rounded-[1.5rem] border border-white/10 bg-white/[0.04] px-4 py-4">
+                <div>
+                  <p className="text-sm font-medium text-foreground">Featured highlight</p>
+                  <p className="text-xs text-muted-foreground">Flag this artwork for premium showcase moments.</p>
+                </div>
+                <Switch checked={form.featured} onCheckedChange={(checked) => handleFieldChange("featured", checked)} />
+              </div>
+
               {mode === "create" ? (
                 <>
                   <ArtworkUploader
@@ -438,92 +446,43 @@ const AdminArtworkFormDialog = ({
                 </>
               ) : (
                 <>
-                  <div className="grid gap-2">
-                    <Label htmlFor="artwork-title">Title</Label>
-                    <Input
-                      id="artwork-title"
-                      value={form.title}
-                      onChange={(event) => handleFieldChange("title", event.target.value)}
-                      className={cn("rounded-2xl border-white/10 bg-black/20", errors.title && "border-red-400/40")}
-                      placeholder="Crimson Moon Duelist"
-                    />
-                    {errors.title ? <p className="text-xs text-red-300">{errors.title}</p> : null}
-                  </div>
+                  <ArtworkUploader
+                    mode="single"
+                    value={{
+                      imageUrl: form.imageUrl,
+                      imageFilename: form.imageFilename,
+                    }}
+                    onChange={({ imageUrl, imageFilename, file }) => {
+                      handleFieldChange("imageUrl", imageUrl);
+                      handleFieldChange("imageFilename", imageFilename);
+                      handleFieldChange("imageFile", file);
+                      setPreviewFailed(false);
+                    }}
+                    error={errors.imageUrl}
+                  />
 
-                  <div className="grid gap-2">
-                    <Label htmlFor="artwork-description">Description</Label>
-                    <Textarea
-                      id="artwork-description"
-                      value={form.description}
-                      onChange={(event) => handleFieldChange("description", event.target.value)}
-                      className={cn("min-h-[120px] rounded-2xl border-white/10 bg-black/20", errors.description && "border-red-400/40")}
-                      placeholder="Describe the scene, mood, and use case for this artwork."
-                    />
-                    {errors.description ? <p className="text-xs text-red-300">{errors.description}</p> : null}
-                  </div>
-
-                  <div className="grid gap-5 md:grid-cols-2">
-                    <div className="grid gap-2">
-                      <Label htmlFor="artwork-tags">Tags</Label>
-                      <Input
-                        id="artwork-tags"
-                        value={form.tags}
-                        onChange={(event) => handleFieldChange("tags", event.target.value)}
-                        className={cn("rounded-2xl border-white/10 bg-black/20", errors.tags && "border-red-400/40")}
-                        placeholder="anime, duel, neon, premium"
-                      />
-                      {errors.tags ? <p className="text-xs text-red-300">{errors.tags}</p> : null}
+                  <div className="grid gap-4 md:grid-cols-3">
+                    <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4">
+                      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                        <Layers3 className="h-4 w-4 text-neon-cyan" />
+                        Artwork
+                      </div>
+                      <div className="mt-3 text-2xl font-semibold text-foreground">{form.imageFilename || "1 item"}</div>
                     </div>
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label>Artwork Image</Label>
-                    <ArtworkUploader
-                      mode="single"
-                      value={{
-                        imageUrl: form.imageUrl,
-                        imageFilename: form.imageFilename,
-                      }}
-                      onChange={({ imageUrl, imageFilename, file }) => {
-                        handleFieldChange("imageUrl", imageUrl);
-                        handleFieldChange("imageFilename", imageFilename);
-                        handleFieldChange("imageFile", file);
-                        setPreviewFailed(false);
-                      }}
-                      error={errors.imageUrl}
-                    />
-                  </div>
-
-                  <div className="grid gap-5 md:grid-cols-2">
-                    <div className="grid gap-2">
-                      <Label htmlFor="artwork-price">Optional price</Label>
-                      <Input
-                        id="artwork-price"
-                        value={form.price}
-                        onChange={(event) => handleFieldChange("price", event.target.value)}
-                        className="rounded-2xl border-white/10 bg-black/20"
-                        placeholder="$240"
-                      />
+                    <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4">
+                      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                        <BarChart3 className="h-4 w-4 text-primary" />
+                        Status
+                      </div>
+                      <div className="mt-3 text-2xl font-semibold text-foreground">{form.featured ? "Featured" : "Standard"}</div>
                     </div>
-
-                    <div className="grid gap-2">
-                      <Label htmlFor="artwork-series">Optional anime series</Label>
-                      <Input
-                        id="artwork-series"
-                        value={form.animeSeries}
-                        onChange={(event) => handleFieldChange("animeSeries", event.target.value)}
-                        className="rounded-2xl border-white/10 bg-black/20"
-                        placeholder="Original Anime Concept"
-                      />
+                    <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-4">
+                      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                        <Sparkles className="h-4 w-4 text-amber-300" />
+                        Ready
+                      </div>
+                      <div className="mt-3 text-2xl font-semibold text-foreground">1/1</div>
                     </div>
-                  </div>
-
-                  <div className="flex items-center justify-between rounded-[1.5rem] border border-white/10 bg-white/[0.04] px-4 py-4">
-                    <div>
-                      <p className="text-sm font-medium text-foreground">Featured highlight</p>
-                      <p className="text-xs text-muted-foreground">Flag this artwork for premium showcase moments.</p>
-                    </div>
-                    <Switch checked={form.featured} onCheckedChange={(checked) => handleFieldChange("featured", checked)} />
                   </div>
                 </>
               )}
@@ -577,23 +536,31 @@ const AdminArtworkFormDialog = ({
                   </div>
                 )}
 
+                {form.featured && (
+                  <div className="absolute right-3 top-3 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-300 shadow-[0_0_20px_rgba(251,191,36,0.3)] backdrop-blur-sm">
+                    ★ Featured
+                  </div>
+                )}
+
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black via-black/65 to-transparent p-5">
                   <div className="eyebrow text-[0.6rem] text-neon-cyan/90">
                     {selectedCategoryLabel || "Artwork"}
                   </div>
-                  <h3 className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-white">
-                    {mode === "create" ? queueItems[0]?.title || "Queued artwork preview" : form.title || "Untitled artwork"}
-                  </h3>
-                  <p className="mt-2 line-clamp-3 text-sm text-white/75">
-                    {mode === "create"
-                      ? "Your first queued artwork is spotlighted here while the grid below manages the full batch."
-                      : form.description || "A cinematic preview panel for title, mood, and metadata before committing changes."}
-                  </p>
+                  {mode === "create" ? (
+                    <>
+                      <h3 className="mt-2 text-2xl font-semibold tracking-[-0.04em] text-white">
+                        {queueItems[0]?.title || "Queued artwork preview"}
+                      </h3>
+                      <p className="mt-2 line-clamp-3 text-sm text-white/75">
+                        Your first queued artwork is spotlighted here while the grid below manages the full batch.
+                      </p>
+                    </>
+                  ) : null}
                 </div>
               </div>
 
-              <div className="space-y-4 p-5">
-                {mode === "create" ? (
+              {mode === "create" ? (
+                <div className="space-y-4 p-5">
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
                       <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">Completed</div>
@@ -604,36 +571,7 @@ const AdminArtworkFormDialog = ({
                       <div className="mt-2 text-sm text-foreground">{queueStats.failed}</div>
                     </div>
                   </div>
-                ) : (
-                  <>
-                    <div className="flex flex-wrap gap-2">
-                      {parsedTags.length > 0 ? (
-                        parsedTags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-xs uppercase tracking-[0.18em] text-muted-foreground"
-                          >
-                            {tag}
-                          </span>
-                        ))
-                      ) : (
-                        <span className="text-sm text-muted-foreground">Add comma-separated tags to enrich search and filtering.</span>
-                      )}
-                    </div>
 
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                        <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">Series</div>
-                        <div className="mt-2 text-sm text-foreground">{form.animeSeries || "Not assigned"}</div>
-                      </div>
-                      <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                        <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">Price</div>
-                        <div className="mt-2 text-sm text-foreground">{form.price || "Custom quote"}</div>
-                      </div>
-                    </div>
-                  </>
-                )}
-                {mode === "create" ? (
                   <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
                     <div className="text-xs uppercase tracking-[0.22em] text-muted-foreground">Upload Summary</div>
                     <div className="mt-2 text-sm text-foreground">
@@ -642,8 +580,8 @@ const AdminArtworkFormDialog = ({
                         : `${queueStats.totalCount} artworks queued for ${selectedCategoryLabel || "selected category"}.`}
                     </div>
                   </div>
-                ) : null}
-              </div>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

@@ -8,7 +8,7 @@ import type { Blog } from "@/types/content";
 
 const BlogAdminList = () => {
   const navigate = useNavigate();
-  const { blogs, categories, deleteBlog, duplicateBlog } = useAdminBlogs();
+  const { blogs, deleteBlog, duplicateBlog } = useAdminBlogs();
   const [deleteTarget, setDeleteTarget] = useState<Blog | null>(null);
 
   const handleDelete = async () => {
@@ -25,7 +25,6 @@ const BlogAdminList = () => {
     <AdminBlogLayout>
       <BlogPostTable
         blogs={blogs}
-        categories={categories}
         onEdit={(blog) => navigate(`/admin/blogs/edit/${blog.id}`)}
         onDelete={setDeleteTarget}
         onDuplicate={(blog) => duplicateBlog(blog.id)}

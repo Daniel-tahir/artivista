@@ -1,5 +1,5 @@
 import { NavLink, Link } from "react-router-dom";
-import { FileText, PlusCircle, Layers, ArrowLeft } from "lucide-react";
+import { FileText, PlusCircle, ArrowLeft } from "lucide-react";
 
 interface AdminBlogLayoutProps {
   children: React.ReactNode;
@@ -8,7 +8,6 @@ interface AdminBlogLayoutProps {
 const navLinks = [
   { to: "/admin/blogs", label: "All Blogs", icon: FileText },
   { to: "/admin/blogs/new", label: "Add Blog", icon: PlusCircle },
-  { to: "/admin/blogs/categories", label: "Categories", icon: Layers },
 ];
 
 const AdminBlogLayout = ({ children }: AdminBlogLayoutProps) => {
