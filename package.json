@@ -5,9 +5,8 @@
   "type": "module",
   "scripts": {
     "artwork:sync": "node ./scripts/sync-artwork-manifests.mjs",
-    "review:sync": "node ./scripts/sync-review-images.mjs",
-    "dev": "npm run review:sync && vite",
-    "build": "npm run review:sync && vite build",
+    "dev": "vite",
+    "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",

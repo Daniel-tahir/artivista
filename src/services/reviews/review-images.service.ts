@@ -1,25 +1,16 @@
 import { supabase } from "@/integrations/supabase/client";
 
-const TABLE = "review_images";
+const TABLE = "testimonials_images";
 const BUCKET = "testimonials";
 
 const SAFE_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
 
-export type ReviewImageRow = {
+export type TestimonialImageRow = {
   id: string;
   image_url: string;
-  alt_text: string | null;
-  category: string | null;
-  position: number | null;
-  is_active: boolean | null;
+  storage_path: string;
   created_at: string | null;
-  category_id: string | null;
-  column_side: string | null;
-  review_categories: {
-    id: string;
-    name: string;
-    slug: string;
-  } | null;
+  updated_at: string | null;
 };
 
 function inferExtension(file: File): string {
@@ -48,113 +39,140 @@ function validateFile(file: File) {
   return ext;
 }
 
-function extractStoragePath(imageUrl: string): string {
-  const prefix = `/${BUCKET}/`;
-  const idx = imageUrl.indexOf(prefix);
-  if (idx === -1) return "";
-  return imageUrl.slice(idx + prefix.length);
+function generateStoragePath(file: File): string {
+  const ts = Date.now();
+  const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+  return `${ts}-${safe}`;
 }
 
-export async function listReviewImages(): Promise<ReviewImageRow[]> {
-  console.log("[review-images] Fetching list...");
-
+export async function listTestimonialImages(): Promise<TestimonialImageRow[]> {
   const { data, error } = await supabase
     .from(TABLE)
-    .select(`
-      id,
-      image_url,
-      alt_text,
-      category,
-      position,
-      is_active,
-      created_at,
-      category_id,
-      column_side,
-      review_categories (
-        id,
-        name,
-        slug
-      )
-    `)
+    .select("id, image_url, storage_path, created_at, updated_at")
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("[review-images] LIST ERROR — full object:", error);
-    throw new Error(error.message || "Failed to list review images.");
+    console.error("[testimonials] LIST ERROR — full object:", error);
+    throw new Error(error.message || "Failed to list testimonial images.");
   }
 
-  console.log(`[review-images] Fetched ${data?.length ?? 0} images.`);
-  return (data ?? []) as ReviewImageRow[];
+  console.log(`[testimonials] Fetched ${data?.length ?? 0} images.`);
+  return (data ?? []) as TestimonialImageRow[];
 }
 
-export async function uploadReviewImage(file: File): Promise<ReviewImageRow> {
-  const ext = validateFile(file);
-  const timestamp = Date.now();
-  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const storagePath = `${timestamp}-${safeName}`;
+export async function uploadTestimonialImage(file: File): Promise<TestimonialImageRow> {
+  validateFile(file);
+  const storagePath = generateStoragePath(file);
 
-  console.log("[review-images] Uploading to storage:", storagePath);
+  console.log("[testimonials] Upload started");
 
   const { error: uploadError } = await supabase.storage
     .from(BUCKET)
     .upload(storagePath, file, { cacheControl: "3600", upsert: false });
 
   if (uploadError) {
-    console.error("[review-images] STORAGE UPLOAD ERROR — full object:", uploadError);
+    console.error("[testimonials] STORAGE UPLOAD ERROR — full object:", uploadError);
     throw new Error(uploadError.message || "Upload failed.");
   }
-
-  console.log("[review-images] Storage upload OK. Getting public URL...");
 
   const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(storagePath);
   const imageUrl = urlData.publicUrl;
 
-  console.log("[review-images] Public URL:", imageUrl);
-  console.log("[review-images] Inserting DB row...");
+  console.log("[testimonials] Storage upload success");
 
-  const { data, error: insertError } = await supabase
-    .from(TABLE)
-    .insert({ image_url: imageUrl })
-    .select(`
-      id,
-      image_url,
-      alt_text,
-      category,
-      position,
-      is_active,
-      created_at,
-      category_id,
-      column_side,
-      review_categories (
-        id,
-        name,
-        slug
-      )
-    `)
-    .single();
+  try {
+    const { data, error: insertError } = await supabase
+      .from(TABLE)
+      .insert({ image_url: imageUrl, storage_path: storagePath })
+      .select("id, image_url, storage_path, created_at, updated_at")
+      .single();
 
-  if (insertError) {
-    console.error("[review-images] DB INSERT ERROR — full object:", insertError);
-    console.log("[review-images] Cleaning up storage file...");
-    await supabase.storage.from(BUCKET).remove([storagePath]);
-    throw new Error(insertError.message || "Failed to save image record.");
+    if (insertError) {
+      throw insertError;
+    }
+
+    console.log("[testimonials] DB insert success");
+    return data as TestimonialImageRow;
+  } catch (error) {
+    console.error("[testimonials] DB insert failed", error);
+    const { error: removeError } = await supabase.storage.from(BUCKET).remove([storagePath]);
+    if (removeError) {
+      console.warn("[testimonials] Storage cleanup failed", removeError);
+    }
+    throw new Error(error instanceof Error ? error.message : "Failed to save image record.");
   }
-
-  console.log("[review-images] DB insert OK, id:", data.id);
-  return data as ReviewImageRow;
 }
 
-export async function deleteReviewImage(id: string): Promise<void> {
-  console.log("[review-images] Deleting image id:", id);
+export async function replaceTestimonialImage(id: string, file: File): Promise<TestimonialImageRow> {
+  validateFile(file);
 
-  const { data: row, error: fetchError } = await supabase
+  const { data: existing, error: fetchError } = await supabase
     .from(TABLE)
-    .select("image_url")
+    .select("storage_path")
     .eq("id", id)
     .single();
 
   if (fetchError) {
-    console.error("[review-images] FETCH ERROR before delete — full object:", fetchError);
+    console.error("[testimonials] FETCH ERROR for replace — full object:", fetchError);
+    throw new Error(fetchError.message || "Image not found.");
+  }
+
+  const newStoragePath = generateStoragePath(file);
+
+  const { error: uploadError } = await supabase.storage
+    .from(BUCKET)
+    .upload(newStoragePath, file, { cacheControl: "3600", upsert: false });
+
+  if (uploadError) {
+    console.error("[testimonials] STORAGE UPLOAD ERROR (replace) — full object:", uploadError);
+    throw new Error(uploadError.message || "Upload failed.");
+  }
+
+  const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(newStoragePath);
+  const newImageUrl = urlData.publicUrl;
+
+  try {
+    const { data, error: updateError } = await supabase
+      .from(TABLE)
+      .update({ image_url: newImageUrl, storage_path: newStoragePath, updated_at: new Date().toISOString() })
+      .eq("id", id)
+      .select("id, image_url, storage_path, created_at, updated_at")
+      .single();
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    if (existing?.storage_path) {
+      const { error: removeError } = await supabase.storage
+        .from(BUCKET)
+        .remove([existing.storage_path]);
+      if (removeError) {
+        console.warn("[testimonials] Old storage cleanup failed", removeError);
+      }
+    }
+
+    console.log("[testimonials] Replace success");
+    return data as TestimonialImageRow;
+  } catch (error) {
+    console.error("[testimonials] Replace failed", error);
+    const { error: removeError } = await supabase.storage.from(BUCKET).remove([newStoragePath]);
+    if (removeError) {
+      console.warn("[testimonials] Replacement cleanup failed", removeError);
+    }
+    throw new Error(error instanceof Error ? error.message : "Failed to update image record.");
+  }
+}
+
+export async function deleteTestimonialImage(id: string): Promise<void> {
+  const { data: row, error: fetchError } = await supabase
+    .from(TABLE)
+    .select("storage_path")
+    .eq("id", id)
+    .single();
+
+  if (fetchError) {
+    console.error("[testimonials] FETCH ERROR before delete — full object:", fetchError);
     throw new Error(fetchError.message || "Image not found.");
   }
 
@@ -164,22 +182,19 @@ export async function deleteReviewImage(id: string): Promise<void> {
     .eq("id", id);
 
   if (deleteError) {
-    console.error("[review-images] DELETE ERROR — full object:", deleteError);
+    console.error("[testimonials] DELETE ERROR — full object:", deleteError);
     throw new Error(deleteError.message || "Failed to delete image record.");
   }
 
-  if (row?.image_url) {
-    const storagePath = extractStoragePath(row.image_url);
-    if (storagePath) {
-      console.log("[review-images] Removing storage file:", storagePath);
-      const { error: storageError } = await supabase.storage
-        .from(BUCKET)
-        .remove([storagePath]);
-      if (storageError) {
-        console.error("[review-images] STORAGE REMOVE ERROR — full object:", storageError);
-      }
+  if (row?.storage_path) {
+    console.log("[testimonials] Removing storage file:", row.storage_path);
+    const { error: storageError } = await supabase.storage
+      .from(BUCKET)
+      .remove([row.storage_path]);
+    if (storageError) {
+      console.warn("[testimonials] Storage delete warning", storageError);
     }
   }
 
-  console.log("[review-images] Delete complete for id:", id);
+  console.log("[testimonials] Delete success");
 }

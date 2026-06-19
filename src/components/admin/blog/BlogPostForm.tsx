@@ -23,6 +23,14 @@ function slugify(text: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+function toLocalInputValue(value: string): string {
+  if (!value) return "";
+  const date = new Date(value);
+  const offset = date.getTimezoneOffset();
+  const local = new Date(date.getTime() - offset * 60_000);
+  return local.toISOString().slice(0, 16);
+}
+
 const BlogPostForm = ({ blog, onSave }: BlogPostFormProps) => {
   const navigate = useNavigate();
   const isEdit = !!blog;
@@ -34,6 +42,7 @@ const BlogPostForm = ({ blog, onSave }: BlogPostFormProps) => {
   const [coverImage, setCoverImage] = useState(blog?.coverImage ?? "");
   const [tagsInput, setTagsInput] = useState(blog?.tags?.join(", ") ?? "");
   const [published, setPublished] = useState(blog?.published ?? false);
+  const [scheduledAt, setScheduledAt] = useState(blog?.scheduledAt ?? "");
   const [featured, setFeatured] = useState(blog?.featured ?? false);
   const [metaTitle, setMetaTitle] = useState(blog?.metaTitle ?? "");
   const [metaDescription, setMetaDescription] = useState(blog?.metaDescription ?? "");
@@ -93,6 +102,7 @@ const BlogPostForm = ({ blog, onSave }: BlogPostFormProps) => {
         content,
         coverImage,
         published,
+        scheduledAt,
         featured,
         metaTitle: metaTitle || title,
         metaDescription: metaDescription || excerpt.slice(0, 160),
@@ -231,6 +241,51 @@ const BlogPostForm = ({ blog, onSave }: BlogPostFormProps) => {
                   className="h-4 w-4 rounded border-white/20 bg-white/[0.05] text-primary focus:ring-primary/30"
                 />
               </label>
+              <div className="space-y-2">
+                <label className="block text-sm text-foreground">Publish Mode</label>
+                <label className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <input
+                    type="radio"
+                    name="publish-mode"
+                    checked={!scheduledAt}
+                    onChange={() => {
+                      setScheduledAt("");
+                      setPublished(true);
+                    }}
+                  />
+                  Publish Now
+                </label>
+                <label className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <input
+                    type="radio"
+                    name="publish-mode"
+                    checked={!!scheduledAt}
+                    onChange={() => {
+                      setPublished(false);
+                      if (!scheduledAt) {
+                        setScheduledAt(new Date().toISOString());
+                      }
+                    }}
+                  />
+                  Schedule for later
+                </label>
+              </div>
+              <div>
+                <label className="mb-1 block text-sm text-foreground">Schedule Publish</label>
+                <input
+                  type="datetime-local"
+                  value={toLocalInputValue(scheduledAt)}
+                  onChange={(e) => {
+                    setScheduledAt(e.target.value ? new Date(e.target.value).toISOString() : "");
+                    if (e.target.value) setPublished(false);
+                  }}
+                  disabled={!scheduledAt && published}
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.05] px-3 py-2 text-sm text-foreground focus:border-primary/40 focus:outline-none"
+                />
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Set a future time to auto-publish this post.
+                </p>
+              </div>
               <label className="flex items-center justify-between">
                 <span className="text-sm text-foreground">Featured</span>
                 <input

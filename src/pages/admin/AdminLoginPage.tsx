@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2, LogIn } from "lucide-react";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import StarField from "@/components/StarField";
+import { Link } from "react-router-dom";
 
 const AdminLoginPage = () => {
   const navigate = useNavigate();
@@ -54,6 +55,12 @@ const AdminLoginPage = () => {
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden cosmic-bg">
       <StarField />
+      <Link
+        to="/"
+        className="absolute left-4 top-4 z-20 inline-flex items-center rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-xs uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
+      >
+        Back to Site
+      </Link>
 
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(168,85,247,0.15),transparent_50%),radial-gradient(circle_at_80%_80%,rgba(236,72,153,0.12),transparent_40%),radial-gradient(circle_at_20%_80%,rgba(34,211,238,0.08),transparent_40%)]" />
 

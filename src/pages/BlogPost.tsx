@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { fetchBlogBySlug, incrementBlogViews } from "@/services/blogs/blog.service";
 import SeoHead from "@/components/SeoHead";
+import SiteLayout from "@/components/layout/SiteLayout";
 import type { Blog } from "@/types/content";
 
 const gradientColors = [
@@ -154,7 +155,7 @@ const BlogPost = () => {
   const graphItems = [breadcrumbJsonLd, articleJsonLd];
 
   return (
-    <>
+    <SiteLayout>
       <SeoHead
         title={post.metaTitle}
         description={post.metaDescription}
@@ -166,8 +167,7 @@ const BlogPost = () => {
         articleTags={post.tags}
         jsonLd={{ "@context": "https://schema.org", "@graph": graphItems }}
       />
-
-      <main className="min-h-screen pt-28 pb-20">
+      <div className="min-h-screen pt-28 pb-20">
         <article className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <nav className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
             <Link to="/" className="hover:text-foreground transition-colors">Home</Link>
@@ -295,8 +295,8 @@ const BlogPost = () => {
             </div>
           </section>
         </article>
-      </main>
-    </>
+      </div>
+    </SiteLayout>
   );
 };
 

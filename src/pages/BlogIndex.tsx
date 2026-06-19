@@ -2,6 +2,7 @@ import { useBlogs } from "@/hooks/useBlogs";
 import BlogCard from "@/components/blog/BlogCard";
 import SeoHead from "@/components/SeoHead";
 import { Skeleton } from "@/components/ui/skeleton";
+import SiteLayout from "@/components/layout/SiteLayout";
 
 const BlogIndex = () => {
   const { data: remotePosts, isLoading, isError } = useBlogs();
@@ -10,15 +11,14 @@ const BlogIndex = () => {
   console.log("Blog Fetch Error:", isError);
 
   return (
-    <>
+    <SiteLayout>
       <SeoHead
         title="Blog | ARTIVISTAA"
         description="Explore our blog for character design tips, D&D inspiration, commission guides, and behind-the-scenes looks at professional fantasy and anime art."
         ogType="website"
         canonical={`${window.location.origin}/blog`}
       />
-
-      <main className="min-h-screen pt-32 pb-20">
+      <div className="min-h-screen pt-32 pb-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <span className="inline-block rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-medium uppercase tracking-[0.25em] text-primary">
@@ -76,8 +76,8 @@ const BlogIndex = () => {
             </div>
           )}
         </div>
-      </main>
-    </>
+      </div>
+    </SiteLayout>
   );
 };
 

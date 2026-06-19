@@ -1,6 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
 import MagicButton from "@/components/MagicButton";
 import SiteLayout from "@/components/layout/SiteLayout";
 import { useDocumentMetadata } from "@/hooks/use-document-metadata";
+import { fetchAboutSection } from "@/services/about/about-section.service";
 import { siteAssets } from "@/lib/site-assets";
 
 const aboutParagraphs = [
@@ -13,18 +15,37 @@ const aboutParagraphs = [
 ] as const;
 
 const About = () => {
+  const { data: about } = useQuery({
+    queryKey: ["about-section-public"],
+    queryFn: fetchAboutSection,
+    staleTime: 1000 * 60 * 5,
+  });
+
   useDocumentMetadata({
     title: "About | ARTIVISTAA",
     description:
       "Learn about the artist behind ARTIVISTAA and the personal approach that shapes every custom artwork project.",
   });
 
+  const aboutParagraphs = about?.content
+    ? about.content.split(/\n{2,}/).map((paragraph) => paragraph.trim()).filter(Boolean)
+    : [
+        "Art has never been just a skill for me; it’s something personal. I enjoy taking ideas, emotions, and imagination and turning them into visuals that people can actually connect with.",
+        "Every piece I create has time, effort, and meaning behind it. I don’t believe in making artwork that only looks good; I want it to feel memorable and leave an impression.",
+        "Whether it’s a bold concept, a custom character, or a simple idea, I focus on creating work that feels unique to the person it’s made for. Because good art isn’t only about details; it’s about emotion.",
+        "I put passion and originality into every project with one goal: creating something clients genuinely love, feel proud of, and want to keep.",
+        "If you’re looking for creative work made with real dedication and attention, you’re in the right place.",
+        "Let’s create something unforgettable together.",
+      ];
+  const aboutImage = about?.imageUrl || siteAssets.about.story;
+  const aboutTitle = about?.title || "About ARTIVISTAA";
+
   return (
     <SiteLayout>
       <section className="section-shell-lg relative overflow-hidden pt-36 md:pt-40">
         <div className="absolute inset-0">
           <img
-            src={siteAssets.about.story}
+            src={aboutImage}
             alt="ARTIVISTAA artwork collage"
             width={4230}
             height={4000}
@@ -42,7 +63,7 @@ const About = () => {
               <div className="grid lg:grid-cols-[0.95fr_1.05fr]">
                 <div className="relative min-h-[320px] border-b border-white/10 lg:min-h-full lg:border-b-0 lg:border-r">
                   <img
-                    src={siteAssets.about.story}
+                    src={aboutImage}
                     alt="Featured ARTIVISTAA artwork"
                     width={4230}
                     height={4000}
@@ -50,7 +71,7 @@ const About = () => {
                   />
                   <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(9,11,25,0.12),rgba(5,8,20,0.82))]" />
                   <div className="absolute inset-x-6 bottom-6 md:inset-x-8 md:bottom-8">
-                    <p className="eyebrow mb-3 text-primary">About ARTIVISTAA</p>
+                    <p className="eyebrow mb-3 text-primary">{aboutTitle}</p>
                     <h1 className="font-display text-4xl font-bold leading-tight text-white drop-shadow-[0_10px_35px_rgba(0,0,0,0.35)] md:text-5xl">
                       Personal Art,
                       <br />

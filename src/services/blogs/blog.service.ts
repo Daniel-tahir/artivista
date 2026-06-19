@@ -20,14 +20,30 @@ const mapBlogRowToBlog = (row: BlogRow): Blog => ({
   createdAt: row.created_at ?? "",
   updatedAt: row.updated_at ?? row.created_at ?? "",
   publishedAt: row.published_at ?? "",
+  scheduledAt: row.scheduled_at ?? "",
+  status: row.published ? "published" : row.scheduled_at ? "scheduled" : "draft",
   tags: [],
 });
 
 const BLOG_SELECT = `
   id, title, slug, excerpt, content, cover_image, author_id,
   published, featured, meta_title, meta_description,
-  views, created_at, updated_at, published_at
+  views, created_at, updated_at, published_at, scheduled_at
 `;
+
+export async function publishDueBlogs(): Promise<number> {
+  const now = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("blogs")
+    .update({ published: true, published_at: now })
+    .lte("scheduled_at", now)
+    .eq("published", false)
+    .not("scheduled_at", "is", null)
+    .select("id");
+
+  if (error) throw error;
+  return data?.length ?? 0;
+}
 
 export const fetchBlogs = async () => {
   const { data, error } = await supabase
@@ -144,17 +160,18 @@ export const createBlog = async (
     content: rowData.content || null,
     cover_image: rowData.coverImage || null,
     author_id: rowData.authorId || null,
-    published: rowData.published,
+    published: rowData.scheduledAt ? false : rowData.published,
     featured: rowData.featured ?? false,
     meta_title: rowData.metaTitle || rowData.title,
     meta_description: rowData.metaDescription || rowData.excerpt?.slice(0, 160) || null,
-    published_at: rowData.published ? (new Date()).toISOString() : null,
+    published_at: rowData.scheduledAt ? null : rowData.published ? (new Date()).toISOString() : null,
+    scheduled_at: rowData.scheduledAt || null,
   };
 
   const { data, error } = await supabase
     .from("blogs")
     .insert(insertData)
-    .select()
+    .select("*")
     .single();
 
   if (error) throw error;
@@ -195,8 +212,12 @@ export const updateBlog = async (
   if (rowData.metaTitle !== undefined) updateData.meta_title = rowData.metaTitle || null;
   if (rowData.metaDescription !== undefined) updateData.meta_description = rowData.metaDescription || null;
   if (rowData.publishedAt !== undefined) updateData.published_at = rowData.publishedAt || null;
+  if (rowData.scheduledAt !== undefined) updateData.scheduled_at = rowData.scheduledAt || null;
 
-  if (rowData.published && !rowData.publishedAt) {
+  if (rowData.scheduledAt) {
+    updateData.published = false;
+    updateData.published_at = null;
+  } else if (rowData.published && !rowData.publishedAt) {
     updateData.published_at = new Date().toISOString();
   }
 
@@ -204,7 +225,7 @@ export const updateBlog = async (
     .from("blogs")
     .update(updateData)
     .eq("id", id)
-    .select()
+    .select("*")
     .single();
 
   if (error) throw error;

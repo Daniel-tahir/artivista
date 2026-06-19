@@ -1,14 +1,15 @@
 import { useCallback, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, ImagePlus, Trash2, Upload } from "lucide-react";
+import { ArrowLeft, ImagePlus, RefreshCw, Trash2, Upload } from "lucide-react";
 import SiteFooter from "@/components/SiteFooter";
 import StarField from "@/components/StarField";
 import {
-  listReviewImages,
-  uploadReviewImage,
-  deleteReviewImage,
-  type ReviewImageRow,
+  listTestimonialImages,
+  uploadTestimonialImage,
+  replaceTestimonialImage,
+  deleteTestimonialImage,
+  type TestimonialImageRow,
 } from "@/services/reviews/review-images.service";
 
 const ReviewsAdminPage = () => {
@@ -22,9 +23,9 @@ const ReviewsAdminPage = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["review-images"],
-    queryFn: listReviewImages,
-    retry: (failureCount, err) => {
+    queryKey: ["testimonial-images"],
+    queryFn: listTestimonialImages,
+    retry: (failureCount) => {
       if (failureCount >= 2) return false;
       if (!navigator.onLine) return false;
       return true;
@@ -35,21 +36,35 @@ const ReviewsAdminPage = () => {
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
       setUploadError(null);
-      return uploadReviewImage(file);
+      return uploadTestimonialImage(file);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["review-images"] });
+      queryClient.invalidateQueries({ queryKey: ["testimonial-images"] });
     },
     onError: (err: Error) => {
       setUploadError(err.message);
-      console.error("[review-admin] Upload error — full object:", err);
+      console.error("[testimonials-admin] Upload error — full object:", err);
+    },
+  });
+
+  const replaceMutation = useMutation({
+    mutationFn: async ({ id, file }: { id: string; file: File }) => {
+      setUploadError(null);
+      return replaceTestimonialImage(id, file);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["testimonial-images"] });
+    },
+    onError: (err: Error) => {
+      setUploadError(err.message);
+      console.error("[testimonials-admin] Replace error — full object:", err);
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => deleteReviewImage(id),
+    mutationFn: (id: string) => deleteTestimonialImage(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["review-images"] });
+      queryClient.invalidateQueries({ queryKey: ["testimonial-images"] });
     },
   });
 
@@ -87,7 +102,7 @@ const ReviewsAdminPage = () => {
                 <span className="bg-gradient-to-r from-primary via-neon-cyan to-neon-magenta bg-clip-text text-transparent">Manager</span>
               </h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                Upload, manage, and organize testimonial screenshots. Images appear in the frontend marquee after the next build.
+                Upload, replace, and manage testimonial screenshots. Images appear instantly on the frontend marquee.
               </p>
             </div>
 
@@ -134,7 +149,13 @@ const ReviewsAdminPage = () => {
             ) : (
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
                 {images.map((img) => (
-                  <ImageCard key={img.id} item={img} onDelete={() => deleteMutation.mutate(img.id)} />
+                  <ImageCard
+                    key={img.id}
+                    item={img}
+                    onDelete={() => deleteMutation.mutate(img.id)}
+                    onReplace={(file) => replaceMutation.mutate({ id: img.id, file })}
+                    isReplacing={replaceMutation.isPending && replaceMutation.variables?.id === img.id}
+                  />
                 ))}
               </div>
             )}
@@ -147,8 +168,19 @@ const ReviewsAdminPage = () => {
   );
 };
 
-const ImageCard = ({ item, onDelete }: { item: ReviewImageRow; onDelete: () => void }) => {
+const ImageCard = ({
+  item,
+  onDelete,
+  onReplace,
+  isReplacing,
+}: {
+  item: TestimonialImageRow;
+  onDelete: () => void;
+  onReplace: (file: File) => void;
+  isReplacing: boolean;
+}) => {
   const [loaded, setLoaded] = useState(false);
+  const replaceInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/30">
@@ -160,22 +192,41 @@ const ImageCard = ({ item, onDelete }: { item: ReviewImageRow; onDelete: () => v
         )}
         <img
           src={item.image_url}
-          alt={item.alt_text ?? ""}
+          alt=""
           className={`h-full w-full object-cover transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}
           onLoad={() => setLoaded(true)}
         />
       </div>
       <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/80 to-transparent px-3 py-2 opacity-0 transition-opacity group-hover:opacity-100">
-        <span className="truncate text-xs text-white/80">
-          {item.alt_text || item.category || "Review Image"}
-        </span>
-        <button
-          onClick={onDelete}
-          className="shrink-0 rounded-lg bg-red-500/20 p-1.5 text-red-400 transition-colors hover:bg-red-500/30 hover:text-red-300"
-          title="Delete image"
-        >
-          <Trash2 className="h-3.5 w-3.5" />
-        </button>
+        <span className="truncate text-xs text-white/80">{item.storage_path}</span>
+        <div className="flex gap-1">
+          <button
+            onClick={() => replaceInputRef.current?.click()}
+            disabled={isReplacing}
+            className="rounded-lg bg-blue-500/20 p-1.5 text-blue-400 transition-colors hover:bg-blue-500/30 hover:text-blue-300 disabled:opacity-50"
+            title="Replace image"
+          >
+            <RefreshCw className={`h-3.5 w-3.5 ${isReplacing ? "animate-spin" : ""}`} />
+          </button>
+          <button
+            onClick={onDelete}
+            className="rounded-lg bg-red-500/20 p-1.5 text-red-400 transition-colors hover:bg-red-500/30 hover:text-red-300"
+            title="Delete image"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
+        <input
+          ref={replaceInputRef}
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          className="hidden"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) onReplace(file);
+            if (replaceInputRef.current) replaceInputRef.current.value = "";
+          }}
+        />
       </div>
     </div>
   );

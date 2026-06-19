@@ -147,6 +147,7 @@ export interface Database {
           created_at: string | null;
           updated_at: string | null;
           published_at: string | null;
+          scheduled_at: string | null;
         };
         Insert: {
           id?: string;
@@ -164,6 +165,7 @@ export interface Database {
           created_at?: string | null;
           updated_at?: string | null;
           published_at?: string | null;
+          scheduled_at?: string | null;
         };
         Update: {
           id?: string;
@@ -181,6 +183,34 @@ export interface Database {
           created_at?: string | null;
           updated_at?: string | null;
           published_at?: string | null;
+          scheduled_at?: string | null;
+        };
+        Relationships: [];
+      };
+      about_section: {
+        Row: {
+          id: string;
+          title: string | null;
+          content: string;
+          image_url: string | null;
+          created_at: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          title?: string | null;
+          content: string;
+          image_url?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          title?: string | null;
+          content?: string;
+          image_url?: string | null;
+          created_at?: string | null;
+          updated_at?: string | null;
         };
         Relationships: [];
       };
@@ -250,60 +280,27 @@ export interface Database {
         };
         Relationships: [];
       };
-      review_categories: {
-        Row: {
-          id: string;
-          name: string;
-          slug: string;
-          created_at: string | null;
-        };
-        Insert: {
-          id?: string;
-          name: string;
-          slug: string;
-          created_at?: string | null;
-        };
-        Update: {
-          id?: string;
-          name?: string;
-          slug?: string;
-          created_at?: string | null;
-        };
-        Relationships: [];
-      };
-      review_images: {
+      testimonials_images: {
         Row: {
           id: string;
           image_url: string;
-          alt_text: string | null;
-          category: string | null;
-          position: number | null;
-          is_active: boolean | null;
+          storage_path: string;
           created_at: string | null;
-          category_id: string | null;
-          column_side: string | null;
+          updated_at: string | null;
         };
         Insert: {
           id?: string;
           image_url: string;
-          alt_text?: string | null;
-          category?: string | null;
-          position?: number | null;
-          is_active?: boolean | null;
+          storage_path: string;
           created_at?: string | null;
-          category_id?: string | null;
-          column_side?: string | null;
+          updated_at?: string | null;
         };
         Update: {
           id?: string;
           image_url?: string;
-          alt_text?: string | null;
-          category?: string | null;
-          position?: number | null;
-          is_active?: boolean | null;
+          storage_path?: string;
           created_at?: string | null;
-          category_id?: string | null;
-          column_side?: string | null;
+          updated_at?: string | null;
         };
         Relationships: [];
       };

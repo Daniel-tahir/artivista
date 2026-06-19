@@ -12,18 +12,16 @@ const navLinks = [
 
 const AdminBlogLayout = ({ children }: AdminBlogLayoutProps) => {
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-16 pt-6 sm:px-6 lg:px-8">
-      <div className="mb-6">
-        <Link
-          to="/admin"
-          className="interactive-surface group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-sm text-muted-foreground hover:-translate-x-0.5 hover:border-primary/30 hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
-          <span>Back to Dashboard</span>
-        </Link>
-      </div>
+    <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+      <Link
+        to="/admin"
+        className="absolute left-4 top-4 z-10 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-sm text-muted-foreground hover:-translate-x-0.5 hover:border-primary/30 hover:text-foreground"
+      >
+        <ArrowLeft className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-0.5" />
+        <span>Back to Dashboard</span>
+      </Link>
 
-      <div className="mb-6">
+      <div className="mb-6 pt-12">
         <h1 className="font-display text-3xl font-bold text-glow">
           Blog <span className="bg-gradient-to-r from-primary via-neon-cyan to-neon-magenta bg-clip-text text-transparent">Manager</span>
         </h1>

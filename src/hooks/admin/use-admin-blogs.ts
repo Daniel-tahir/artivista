@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   fetchAllBlogs,
   fetchBlogById,
@@ -23,7 +24,9 @@ export function useAdminBlogs() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-blogs"] });
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      toast.success("Blog created");
     },
+    onError: (error: Error) => toast.error(error.message),
   });
 
   const updateMutation = useMutation({
@@ -31,7 +34,9 @@ export function useAdminBlogs() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-blogs"] });
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      toast.success("Blog updated");
     },
+    onError: (error: Error) => toast.error(error.message),
   });
 
   const deleteMutation = useMutation({
@@ -39,7 +44,9 @@ export function useAdminBlogs() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-blogs"] });
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      toast.success("Blog deleted");
     },
+    onError: (error: Error) => toast.error(error.message),
   });
 
   const duplicateMutation = useMutation({
@@ -47,7 +54,9 @@ export function useAdminBlogs() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-blogs"] });
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      toast.success("Blog duplicated");
     },
+    onError: (error: Error) => toast.error(error.message),
   });
 
   return {

@@ -6,6 +6,7 @@ import PageLoader from "@/components/performance/PageLoader";
 import PerformanceProvider from "@/components/performance/PerformanceProvider";
 import AdminSessionWatcher from "@/components/admin/AdminSessionWatcher";
 import ProtectedAdminRoute from "@/components/admin/ProtectedAdminRoute";
+import { useBlogPublisher } from "@/hooks/useBlogs";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,10 +20,16 @@ const AdminLoginPage = lazy(() => import("./pages/admin/AdminLoginPage.tsx"));
 const AdminDashboardPage = lazy(() => import("./pages/admin/AdminDashboardPage.tsx"));
 const BlogAdminList = lazy(() => import("./pages/admin/BlogAdminList.tsx"));
 const BlogAdminEditor = lazy(() => import("./pages/admin/BlogAdminEditor.tsx"));
+const AboutAdminPage = lazy(() => import("./pages/admin/AboutAdminPage.tsx"));
 const ReviewsAdminPage = lazy(() => import("./pages/admin/ReviewsAdminPage.tsx"));
 const NotFound = lazy(() => import("./pages/NotFound.tsx"));
 
 const queryClient = new QueryClient();
+
+const BlogPublisherWatcher = () => {
+  useBlogPublisher();
+  return null;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -33,6 +40,7 @@ const App = () => (
         <BrowserRouter>
           <HashScrollHandler />
           <AdminSessionWatcher />
+          <BlogPublisherWatcher />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -46,6 +54,7 @@ const App = () => (
                 <Route path="/admin/blogs" element={<BlogAdminList />} />
                 <Route path="/admin/blogs/new" element={<BlogAdminEditor />} />
                 <Route path="/admin/blogs/edit/:id" element={<BlogAdminEditor />} />
+                <Route path="/admin/about" element={<AboutAdminPage />} />
                 <Route path="/admin/testimonials" element={<ReviewsAdminPage />} />
               </Route>
               <Route path="/not-found" element={<NotFound />} />

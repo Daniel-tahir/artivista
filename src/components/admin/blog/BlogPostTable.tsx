@@ -16,10 +16,13 @@ interface BlogPostTableProps {
 const statusConfig = {
   published: { label: "Published", class: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400" },
   draft: { label: "Draft", class: "border-amber-500/30 bg-amber-500/10 text-amber-400" },
+  scheduled: { label: "Scheduled", class: "border-cyan-500/30 bg-cyan-500/10 text-cyan-400" },
 } as const;
 
 function getStatus(blog: Blog): keyof typeof statusConfig {
-  return blog.published ? "published" : "draft";
+  if (blog.published) return "published";
+  if (blog.scheduledAt) return "scheduled";
+  return "draft";
 }
 
 const BlogPostTable = ({ blogs, onEdit, onDelete, onDuplicate }: BlogPostTableProps) => {
@@ -58,6 +61,7 @@ const BlogPostTable = ({ blogs, onEdit, onDelete, onDuplicate }: BlogPostTablePr
           <option value="all">All Status</option>
           <option value="published">Published</option>
           <option value="draft">Draft</option>
+          <option value="scheduled">Scheduled</option>
         </select>
       </div>
 

@@ -1,5 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchBlogs } from "@/services/blogs/blog.service";
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { fetchBlogs, publishDueBlogs } from "@/services/blogs/blog.service";
 
 export const useBlogs = () =>
   useQuery({
@@ -7,3 +8,27 @@ export const useBlogs = () =>
     queryFn: fetchBlogs,
     staleTime: 1000 * 60 * 5,
   });
+
+export const useBlogPublisher = () => {
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const syncScheduledPosts = async () => {
+      try {
+        await publishDueBlogs();
+        await queryClient.invalidateQueries({ queryKey: ["blogs"] });
+        await queryClient.invalidateQueries({ queryKey: ["admin-blogs"] });
+      } catch (error) {
+        console.error("[blogs] scheduled publish sync failed", error);
+      }
+    };
+
+    void syncScheduledPosts();
+
+    const intervalId = window.setInterval(() => {
+      void syncScheduledPosts();
+    }, 60_000);
+
+    return () => window.clearInterval(intervalId);
+  }, [queryClient]);
+};

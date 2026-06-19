@@ -64,7 +64,18 @@ export interface Blog {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
+  scheduledAt: string;
+  status: string;
   tags: string[];
+}
+
+export interface AboutSection {
+  id: string;
+  title: string;
+  content: string;
+  imageUrl: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface FeedbackEntry {
