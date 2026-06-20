@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import type { ArtworkCategorySummary } from "@/data/artwork";
 import { useArtworks } from "@/hooks/useArtworks";
 import { useCategories } from "@/hooks/useCategories";
-import { useFeaturedArtworks } from "@/hooks/useFeaturedArtworks";
 import type { Artwork } from "@/types/content";
 
 const buildCategorySummaries = (
@@ -28,11 +27,13 @@ const buildCategorySummaries = (
 export const useArtworkLibrary = () => {
   const artworksQuery = useArtworks();
   const categoriesQuery = useCategories();
-  const featuredArtworksQuery = useFeaturedArtworks();
 
   const artworks = artworksQuery.data ?? [];
   const categories = categoriesQuery.data ?? [];
-  const featuredArtworks = featuredArtworksQuery.data ?? [];
+  const featuredArtworks = useMemo(
+    () => artworks.filter((a) => a.featured),
+    [artworks],
+  );
   const categorySummaries = useMemo(
     () => buildCategorySummaries(categories, artworks),
     [artworks, categories],
@@ -45,12 +46,11 @@ export const useArtworkLibrary = () => {
     categorySummaries,
     isLoading: artworksQuery.isLoading || categoriesQuery.isLoading,
     isError: artworksQuery.isError || categoriesQuery.isError,
-    error: artworksQuery.error ?? categoriesQuery.error ?? featuredArtworksQuery.error ?? null,
+    error: artworksQuery.error ?? categoriesQuery.error ?? null,
     refetch: async () => {
       await Promise.all([
         artworksQuery.refetch(),
         categoriesQuery.refetch(),
-        featuredArtworksQuery.refetch(),
       ]);
     },
     getCategoryBySlug: (slug: string) => categorySummaries.find((category) => category.slug === slug),

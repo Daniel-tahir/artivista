@@ -15,20 +15,35 @@ export const useBlogPublisher = () => {
   useEffect(() => {
     const syncScheduledPosts = async () => {
       try {
-        await publishDueBlogs();
-        await queryClient.invalidateQueries({ queryKey: ["blogs"] });
-        await queryClient.invalidateQueries({ queryKey: ["admin-blogs"] });
+        const published = await publishDueBlogs();
+        if (published > 0) {
+          await queryClient.invalidateQueries({ queryKey: ["blogs"] });
+          await queryClient.invalidateQueries({ queryKey: ["admin-blogs"] });
+        }
       } catch (error) {
         console.error("[blogs] scheduled publish sync failed", error);
       }
     };
 
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        void syncScheduledPosts();
+      }
+    };
+
     void syncScheduledPosts();
 
+    document.addEventListener("visibilitychange", handleVisibility);
+
     const intervalId = window.setInterval(() => {
-      void syncScheduledPosts();
+      if (document.visibilityState === "visible") {
+        void syncScheduledPosts();
+      }
     }, 60_000);
 
-    return () => window.clearInterval(intervalId);
+    return () => {
+      window.clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
   }, [queryClient]);
 };

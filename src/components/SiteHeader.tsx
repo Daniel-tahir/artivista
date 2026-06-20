@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { usePerformanceProfile } from "@/components/performance/PerformanceProvider";
 import { Menu, ChevronDown } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
@@ -32,6 +33,10 @@ const SiteHeader = () => {
   const homeHref = location.pathname === "/" ? "#home" : "/#home";
   const { isScrolled } = usePerformanceProfile();
   const { categorySummaries } = useArtworkLibrary();
+  const mainNavItems = useMemo(
+    () => navItems.filter((item) => item.label !== "Artwork"),
+    [],
+  );
 
   return (
     <header className="fixed top-0 inset-x-0 z-50">
@@ -62,9 +67,7 @@ const SiteHeader = () => {
             </Link>
 
             <nav className="hidden md:flex items-center gap-1.5">
-              {navItems
-                .filter((item) => item.label !== "Artwork")
-                .map((item) => (
+              {mainNavItems.map((item) => (
                   <Link
                     key={item.label}
                     to={item.href}
@@ -134,9 +137,7 @@ const SiteHeader = () => {
                 </SheetHeader>
                 <div className="mobile-nav-scroll mt-8 flex max-h-[calc(100vh-7.5rem)] flex-col gap-4 overflow-y-auto overscroll-contain pr-1">
                   <div className="flex flex-col gap-3 md:hidden">
-                      {navItems
-                        .filter((item) => item.label !== "Artwork")
-                        .map((item) => (
+                      {mainNavItems.map((item) => (
                           <SheetClose asChild key={item.label}>
                             <Link
                               to={item.href}
@@ -149,9 +150,7 @@ const SiteHeader = () => {
                   </div>
 
                   <div className="hidden md:flex md:flex-col md:gap-3">
-                    {navItems
-                      .filter((item) => item.label !== "Artwork")
-                      .map((item) => (
+                    {mainNavItems.map((item) => (
                         <SheetClose asChild key={item.label}>
                           <Link
                             to={item.href}

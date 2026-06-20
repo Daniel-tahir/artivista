@@ -4,6 +4,11 @@ import type { Database } from "@/types/database";
 
 type BlogRow = Database["public"]["Tables"]["blogs"]["Row"];
 
+function toUTC(value: string): string {
+  if (!value) return value;
+  return new Date(value).toISOString();
+}
+
 const mapBlogRowToBlog = (row: BlogRow): Blog => ({
   id: row.id,
   title: row.title,
@@ -165,7 +170,7 @@ export const createBlog = async (
     meta_title: rowData.metaTitle || rowData.title,
     meta_description: rowData.metaDescription || rowData.excerpt?.slice(0, 160) || null,
     published_at: rowData.scheduledAt ? null : rowData.published ? (new Date()).toISOString() : null,
-    scheduled_at: rowData.scheduledAt || null,
+    scheduled_at: toUTC(rowData.scheduledAt) || null,
   };
 
   const { data, error } = await supabase
@@ -212,7 +217,7 @@ export const updateBlog = async (
   if (rowData.metaTitle !== undefined) updateData.meta_title = rowData.metaTitle || null;
   if (rowData.metaDescription !== undefined) updateData.meta_description = rowData.metaDescription || null;
   if (rowData.publishedAt !== undefined) updateData.published_at = rowData.publishedAt || null;
-  if (rowData.scheduledAt !== undefined) updateData.scheduled_at = rowData.scheduledAt || null;
+  if (rowData.scheduledAt !== undefined) updateData.scheduled_at = toUTC(rowData.scheduledAt) || null;
 
   if (rowData.scheduledAt) {
     updateData.published = false;
@@ -226,9 +231,10 @@ export const updateBlog = async (
     .update(updateData)
     .eq("id", id)
     .select("*")
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
+  if (!data) throw new Error("Blog not found — update may have been blocked by permissions");
 
   const updated = mapBlogRowToBlog(data);
 
@@ -268,6 +274,14 @@ export const deleteBlog = async (id: string): Promise<void> => {
 
   const { error } = await supabase.from("blogs").delete().eq("id", id);
   if (error) throw error;
+
+  const { data: check } = await supabase
+    .from("blogs")
+    .select("id")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (check) throw new Error("Blog was not deleted — may have been blocked by permissions");
 };
 
 export const duplicateBlog = async (id: string): Promise<Blog> => {

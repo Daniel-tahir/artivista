@@ -40,8 +40,6 @@ const AdminLoginPage = () => {
 
     setLoading(true);
 
-    await new Promise((r) => setTimeout(r, 600));
-
     const success = login(username, password);
     setLoading(false);
 

@@ -29,6 +29,7 @@ const ImageCard = ({ src }: { src: string }) => (
 
 function useCountUp(target: number, suffix: string, shouldStart: boolean) {
   const [display, setDisplay] = useState(`0${suffix}`);
+  const displayRef = useRef(`0${suffix}`);
 
   useEffect(() => {
     if (!shouldStart) return;
@@ -36,6 +37,8 @@ function useCountUp(target: number, suffix: string, shouldStart: boolean) {
     const duration = 2000;
     let start: number | null = null;
     let raf: number;
+    let lastUpdate = 0;
+    const throttleMs = 50;
 
     const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
@@ -45,7 +48,12 @@ function useCountUp(target: number, suffix: string, shouldStart: boolean) {
       const progress = Math.min(elapsed / duration, 1);
       const eased = easeOutCubic(progress);
       const val = Math.round(target * eased);
-      setDisplay(`${val.toLocaleString()}${suffix}`);
+      const text = `${val.toLocaleString()}${suffix}`;
+      displayRef.current = text;
+      if (now - lastUpdate >= throttleMs) {
+        lastUpdate = now;
+        setDisplay(text);
+      }
       if (progress < 1) raf = requestAnimationFrame(tick);
     };
 

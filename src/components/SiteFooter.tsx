@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Instagram, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import WhatsAppIcon from "./WhatsAppIcon";
@@ -126,4 +127,4 @@ const SiteFooter = () => {
   );
 };
 
-export default SiteFooter;
+export default memo(SiteFooter);

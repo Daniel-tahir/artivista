@@ -96,7 +96,7 @@ const AdminDashboardPage = () => {
           </div>
         </section>
 
-        <section className="px-4 sm:px-6 lg:px-8">
+        <section className="px-4 pb-6 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <Link
               to="/admin/blogs"
@@ -122,7 +122,7 @@ const AdminDashboardPage = () => {
           </div>
         </section>
 
-        <section className="px-4 sm:px-6 lg:px-8">
+        <section className="px-4 pb-6 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl">
             <Link
               to="/admin/testimonials"

@@ -83,6 +83,19 @@ const SeoHead = (config: SeoConfig) => {
     description: string;
   } | null>(null);
 
+  const {
+    title,
+    description,
+    ogTitle,
+    ogDescription,
+    ogImage,
+    ogType,
+    canonical,
+    articlePublishedTime,
+    articleTags,
+    jsonLd,
+  } = config;
+
   useEffect(() => {
     const prev = {
       title: document.title,
@@ -91,42 +104,42 @@ const SeoHead = (config: SeoConfig) => {
     };
     previousRef.current = prev;
 
-    const fullTitle = config.title.includes(SITE_NAME)
-      ? config.title
-      : `${config.title} | ${SITE_NAME}`;
+    const fullTitle = title.includes(SITE_NAME)
+      ? title
+      : `${title} | ${SITE_NAME}`;
 
     document.title = fullTitle;
-    upsertMeta("description", config.description, "name");
-    upsertMeta("og:title", config.ogTitle ?? fullTitle, "property");
-    upsertMeta("og:description", config.ogDescription ?? config.description, "property");
-    upsertMeta("og:type", config.ogType ?? "article", "property");
+    upsertMeta("description", description, "name");
+    upsertMeta("og:title", ogTitle ?? fullTitle, "property");
+    upsertMeta("og:description", ogDescription ?? description, "property");
+    upsertMeta("og:type", ogType ?? "article", "property");
     upsertMeta("og:site_name", SITE_NAME, "property");
 
-    const url = config.canonical ?? window.location.href;
+    const url = canonical ?? window.location.href;
     upsertMeta("og:url", url, "property");
     upsertLink("canonical", url);
 
-    const ogImage = config.ogImage ?? DEFAULT_OG_IMAGE;
-    if (ogImage) {
-      upsertMeta("og:image", ogImage, "property");
-      upsertMeta("twitter:image", ogImage, "name");
+    const resolvedOgImage = ogImage ?? DEFAULT_OG_IMAGE;
+    if (resolvedOgImage) {
+      upsertMeta("og:image", resolvedOgImage, "property");
+      upsertMeta("twitter:image", resolvedOgImage, "name");
     }
 
     upsertMeta("twitter:card", "summary_large_image", "name");
-    upsertMeta("twitter:title", config.ogTitle ?? fullTitle, "name");
-    upsertMeta("twitter:description", config.ogDescription ?? config.description, "name");
+    upsertMeta("twitter:title", ogTitle ?? fullTitle, "name");
+    upsertMeta("twitter:description", ogDescription ?? description, "name");
 
-    if (config.articlePublishedTime) {
-      upsertMeta("article:published_time", config.articlePublishedTime, "property");
+    if (articlePublishedTime) {
+      upsertMeta("article:published_time", articlePublishedTime, "property");
     }
-    if (config.articleTags?.length) {
-      config.articleTags.forEach((tag) => {
+    if (articleTags?.length) {
+      for (const tag of articleTags) {
         upsertMeta("article:tag", tag, "property");
-      });
+      }
     }
 
-    if (config.jsonLd) {
-      upsertJsonLd("seo-structured-data", config.jsonLd);
+    if (jsonLd) {
+      upsertJsonLd("seo-structured-data", jsonLd);
     }
 
     return () => {
@@ -143,17 +156,28 @@ const SeoHead = (config: SeoConfig) => {
       removeMeta("twitter:description", "name");
       removeMeta("twitter:image", "name");
       removeMeta("article:published_time", "property");
-      if (config.articleTags?.length) {
-        config.articleTags.forEach((tag) => {
+      if (articleTags?.length) {
+        for (const tag of articleTags) {
           removeMeta("article:tag", "property");
-        });
+        }
       }
       removeLink("canonical");
-      if (config.jsonLd) {
+      if (jsonLd) {
         removeJsonLd("seo-structured-data");
       }
     };
-  }, [config]);
+  }, [
+    title,
+    description,
+    ogTitle,
+    ogDescription,
+    ogImage,
+    ogType,
+    canonical,
+    articlePublishedTime,
+    articleTags,
+    jsonLd,
+  ]);
 
   return null;
 };
