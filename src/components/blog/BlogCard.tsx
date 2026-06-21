@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import { Calendar, Clock, ArrowRight } from "lucide-react";
 import type { Blog } from "@/types/content";
@@ -111,4 +112,4 @@ const BlogCard = ({ post, index = 0 }: BlogCardProps) => {
   );
 };
 
-export default BlogCard;
+export default memo(BlogCard);

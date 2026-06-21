@@ -5,5 +5,5 @@ export const useArtworks = (options: FetchArtworksOptions = {}) =>
   useQuery({
     queryKey: ["artworks", options],
     queryFn: () => fetchArtworks(options),
-    staleTime: 1000 * 60,
+    staleTime: 1000 * 60 * 5,
   });

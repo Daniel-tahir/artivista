@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
@@ -25,6 +25,16 @@ const ArtworkLightbox = ({
   onNext,
 }: ArtworkLightboxProps) => {
   const activeItem = items[activeIndex];
+  const onOpenChangeRef = useRef(onOpenChange);
+  const onPreviousRef = useRef(onPrevious);
+  const onNextRef = useRef(onNext);
+
+  useEffect(() => {
+    onOpenChangeRef.current = onOpenChange;
+    onPreviousRef.current = onPrevious;
+    onNextRef.current = onNext;
+  });
+
   useEffect(() => {
     if (!open) {
       return;
@@ -35,15 +45,15 @@ const ArtworkLightbox = ({
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onOpenChange(false);
+        onOpenChangeRef.current(false);
       }
 
       if (event.key === "ArrowLeft") {
-        onPrevious();
+        onPreviousRef.current();
       }
 
       if (event.key === "ArrowRight") {
-        onNext();
+        onNextRef.current();
       }
     };
 
@@ -53,7 +63,7 @@ const ArtworkLightbox = ({
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [onNext, onOpenChange, onPrevious, open]);
+  }, [open]);
 
   const counterText = useMemo(
     () => `${activeIndex + 1} / ${items.length}`,
