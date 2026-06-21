@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { devlog } from "@/utils/security";
 import { fetchBlogs, publishDueBlogs } from "@/services/blogs/blog.service";
 
 export const useBlogs = () =>
@@ -21,7 +22,7 @@ export const useBlogPublisher = () => {
           await queryClient.invalidateQueries({ queryKey: ["admin-blogs"] });
         }
       } catch (error) {
-        console.error("[blogs] scheduled publish sync failed", error);
+        devlog("error", "[blogs] scheduled publish sync failed", error);
       }
     };
 

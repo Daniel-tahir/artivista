@@ -1,10 +1,18 @@
+import { useEffect } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import PageLoader from "@/components/performance/PageLoader";
+import { supabase } from "@/integrations/supabase/client";
 
 const ProtectedAdminRoute = () => {
   const { isAuthenticated, logout } = useAdminAuth();
   const location = useLocation();
+
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      supabase.auth.signOut();
+    }
+  }, [isAuthenticated]);
 
   if (isAuthenticated === null) {
     return <PageLoader />;

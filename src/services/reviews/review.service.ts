@@ -1,9 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
+import { devlog } from "@/utils/security";
 
 const TABLE = "testimonials_images";
 
 export async function getReviewImages(): Promise<string[]> {
-  console.log("[testimonials] Fetching image URLs for marquee...");
+  devlog("log", "[testimonials] Fetching image URLs for marquee...");
 
   const { data, error } = await supabase
     .from(TABLE)
@@ -11,11 +12,11 @@ export async function getReviewImages(): Promise<string[]> {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("[testimonials] FETCH ERROR — full object:", error);
+    devlog("error", "[testimonials] FETCH ERROR — full object:", error);
     return [];
   }
 
   const urls = (data ?? []).map((row) => row.image_url).filter(Boolean);
-  console.log(`[testimonials] Fetched ${urls.length} images.`);
+  devlog("log", `[testimonials] Fetched ${urls.length} images.`);
   return urls;
 }

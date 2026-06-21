@@ -40,13 +40,13 @@ const AdminLoginPage = () => {
 
     setLoading(true);
 
-    const success = login(username, password);
-    setLoading(false);
-
-    if (success) {
+    try {
+      await login(username, password);
       navigate("/admin", { replace: true });
-    } else {
-      setError("Invalid username or password.");
+    } catch (err: any) {
+      setError(err?.message || "Invalid credentials.");
+    } finally {
+      setLoading(false);
     }
   };
 

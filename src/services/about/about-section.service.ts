@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { AboutSection } from "@/types/content";
 import type { Database } from "@/types/database";
+import { sanitizeText, sanitizeHtml, clampLength, MAX_INPUT_LENGTHS } from "@/utils/security";
 
 type AboutRow = Database["public"]["Tables"]["about_section"]["Row"];
 
@@ -19,18 +20,16 @@ function mapAboutRow(row: AboutRow): AboutSection {
 }
 
 function validateImage(file: File) {
-  const allowed = new Set(["image/png", "image/jpeg", "image/webp"]);
-  if (!(file instanceof File)) {
+  const allowed = new Set(["image/png", "image/jpeg", "image/webp", "image/gif"]);
+  const maxSize = 10 * 1024 * 1024;
+  if (!(file instanceof File) || !file.name?.trim() || file.size <= 0) {
     throw new Error("Invalid image file.");
   }
-  if (!file.name?.trim()) {
-    throw new Error("Image file must have a name.");
-  }
   if (!allowed.has(file.type)) {
-    throw new Error("Invalid image type. Use PNG, JPEG, or WebP.");
+    throw new Error("Invalid image type. Use PNG, JPEG, WebP, or GIF.");
   }
-  if (file.size <= 0 || file.size > 10 * 1024 * 1024) {
-    throw new Error("Invalid image. Use PNG, JPEG, or WebP up to 10 MB.");
+  if (file.size > maxSize) {
+    throw new Error("Image too large. Maximum size is 10 MB.");
   }
 }
 
@@ -58,7 +57,7 @@ export async function saveAboutSection(input: { title: string; content: string; 
     storagePath = generateStoragePath(input.imageFile);
     const { error: uploadError } = await supabase.storage.from(BUCKET).upload(storagePath, input.imageFile, {
       cacheControl: "3600",
-      upsert: true,
+      upsert: false,
       contentType: input.imageFile.type,
     });
     if (uploadError) throw new Error(uploadError.message || "Image upload failed.");
@@ -67,8 +66,8 @@ export async function saveAboutSection(input: { title: string; content: string; 
   }
 
   const payload = {
-    title: input.title,
-    content: input.content,
+    title: clampLength(sanitizeText(input.title), MAX_INPUT_LENGTHS.TITLE),
+    content: sanitizeHtml(input.content),
     image_url: imageUrl || null,
     created_at: existing?.createdAt || new Date().toISOString(),
     updated_at: new Date().toISOString(),

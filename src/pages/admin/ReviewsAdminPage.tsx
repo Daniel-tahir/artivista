@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, ImagePlus, RefreshCw, Trash2, Upload } from "lucide-react";
 import SiteFooter from "@/components/SiteFooter";
 import StarField from "@/components/StarField";
+import { devlog } from "@/utils/security";
 import {
   listTestimonialImages,
   uploadTestimonialImage,
@@ -43,7 +44,7 @@ const ReviewsAdminPage = () => {
     },
     onError: (err: Error) => {
       setUploadError(err.message);
-      console.error("[testimonials-admin] Upload error — full object:", err);
+      devlog("error", "[testimonials-admin] Upload error — full object:", err);
     },
   });
 
@@ -57,7 +58,7 @@ const ReviewsAdminPage = () => {
     },
     onError: (err: Error) => {
       setUploadError(err.message);
-      console.error("[testimonials-admin] Replace error — full object:", err);
+      devlog("error", "[testimonials-admin] Replace error — full object:", err);
     },
   });
 

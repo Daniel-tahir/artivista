@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Artwork, Category } from "@/types/content";
 import type { Database } from "@/types/database";
+import { sanitizeText, clampLength, escapeLikePattern, MAX_INPUT_LENGTHS } from "@/utils/security";
 
 type ArtworkRow = Database["public"]["Tables"]["artworks"]["Row"];
 type ArtworkInsert = Database["public"]["Tables"]["artworks"]["Insert"];
@@ -123,7 +124,8 @@ export const fetchArtworks = async (options: FetchArtworksOptions = {}) => {
   }
 
   if (options.search) {
-    query = query.or(`title.ilike.%${options.search}%,anime_series.ilike.%${options.search}%`);
+    const safe = escapeLikePattern(options.search);
+    query = query.or(`title.ilike.%${safe}%,anime_series.ilike.%${safe}%`);
   }
 
   if (options.limit) {
@@ -161,15 +163,15 @@ export const fetchArtworkBySlug = async (slug: string) => {
 
 export const createArtwork = async (input: UpsertArtworkInput) => {
   const payload: ArtworkInsert = {
-    title: input.title,
+    title: clampLength(sanitizeText(input.title), MAX_INPUT_LENGTHS.TITLE),
     slug: input.slug,
-    description: input.description || null,
+    description: input.description ? clampLength(sanitizeText(input.description), MAX_INPUT_LENGTHS.DESCRIPTION) : null,
     image_url: input.imageUrl,
     thumbnail_url: input.thumbnailUrl || input.imageUrl,
     category_id: input.categoryId,
     featured: input.featured,
-    tags: input.tags,
-    anime_series: input.animeSeries || null,
+    tags: input.tags.map((tag) => sanitizeText(tag)),
+    anime_series: input.animeSeries ? clampLength(sanitizeText(input.animeSeries), MAX_INPUT_LENGTHS.ANIME_SERIES) : null,
     price: input.price ?? null,
     status: input.status ?? "published",
     published_at: input.publishedAt ?? new Date().toISOString(),
@@ -190,15 +192,15 @@ export const createArtwork = async (input: UpsertArtworkInput) => {
 
 export const updateArtwork = async (id: string, input: UpsertArtworkInput) => {
   const payload: ArtworkUpdate = {
-    title: input.title,
+    title: clampLength(sanitizeText(input.title), MAX_INPUT_LENGTHS.TITLE),
     slug: input.slug,
-    description: input.description || null,
+    description: input.description ? clampLength(sanitizeText(input.description), MAX_INPUT_LENGTHS.DESCRIPTION) : null,
     image_url: input.imageUrl,
     thumbnail_url: input.thumbnailUrl || input.imageUrl,
     category_id: input.categoryId,
     featured: input.featured,
-    tags: input.tags,
-    anime_series: input.animeSeries || null,
+    tags: input.tags.map((tag) => sanitizeText(tag)),
+    anime_series: input.animeSeries ? clampLength(sanitizeText(input.animeSeries), MAX_INPUT_LENGTHS.ANIME_SERIES) : null,
     price: input.price ?? null,
     status: input.status ?? "published",
     published_at: input.publishedAt ?? new Date().toISOString(),

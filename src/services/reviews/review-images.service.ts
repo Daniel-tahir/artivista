@@ -1,9 +1,8 @@
 import { supabase } from "@/integrations/supabase/client";
+import { validateUploadFile, inferSafeExtension, devlog } from "@/utils/security";
 
 const TABLE = "testimonials_images";
 const BUCKET = "testimonials";
-
-const SAFE_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
 
 export type TestimonialImageRow = {
   id: string;
@@ -13,29 +12,14 @@ export type TestimonialImageRow = {
   updated_at: string | null;
 };
 
-function inferExtension(file: File): string {
-  const fromName = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "");
-  if (fromName && ["png", "jpg", "jpeg", "webp"].includes(fromName)) {
-    return fromName === "jpg" ? "jpeg" : fromName;
-  }
-  if (file.type === "image/png") return "png";
-  if (file.type === "image/jpeg") return "jpeg";
-  if (file.type === "image/webp") return "webp";
-  return "";
-}
-
 function validateFile(file: File) {
-  if (!(file instanceof File) || !file.name.trim() || file.size <= 0) {
-    throw new Error("Invalid file.");
-  }
-  if (!SAFE_TYPES.has(file.type)) {
-    throw new Error("Unsupported file type. Use PNG, JPEG, or WebP.");
-  }
-  const ext = inferExtension(file);
+  validateUploadFile(file, {
+    allowedMimeTypes: new Set(["image/png", "image/jpeg", "image/webp"]),
+    allowedExtensions: new Set(["png", "jpg", "jpeg", "webp"]),
+    maxSizeBytes: 10 * 1024 * 1024,
+  });
+  const ext = inferSafeExtension(file);
   if (!ext) throw new Error("Could not determine file extension.");
-  if (file.size > 10 * 1024 * 1024) {
-    throw new Error("File too large. Maximum size is 10 MB.");
-  }
   return ext;
 }
 
@@ -52,11 +36,11 @@ export async function listTestimonialImages(): Promise<TestimonialImageRow[]> {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("[testimonials] LIST ERROR — full object:", error);
+    devlog("error", "[testimonials] LIST ERROR — full object:", error);
     throw new Error(error.message || "Failed to list testimonial images.");
   }
 
-  console.log(`[testimonials] Fetched ${data?.length ?? 0} images.`);
+  devlog("log", `[testimonials] Fetched ${data?.length ?? 0} images.`);
   return (data ?? []) as TestimonialImageRow[];
 }
 
@@ -64,21 +48,21 @@ export async function uploadTestimonialImage(file: File): Promise<TestimonialIma
   validateFile(file);
   const storagePath = generateStoragePath(file);
 
-  console.log("[testimonials] Upload started");
+  devlog("log", "[testimonials] Upload started");
 
   const { error: uploadError } = await supabase.storage
     .from(BUCKET)
     .upload(storagePath, file, { cacheControl: "3600", upsert: false });
 
   if (uploadError) {
-    console.error("[testimonials] STORAGE UPLOAD ERROR — full object:", uploadError);
+    devlog("error", "[testimonials] STORAGE UPLOAD ERROR — full object:", uploadError);
     throw new Error(uploadError.message || "Upload failed.");
   }
 
   const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(storagePath);
   const imageUrl = urlData.publicUrl;
 
-  console.log("[testimonials] Storage upload success");
+  devlog("log", "[testimonials] Storage upload success");
 
   try {
     const { data, error: insertError } = await supabase
@@ -91,13 +75,13 @@ export async function uploadTestimonialImage(file: File): Promise<TestimonialIma
       throw insertError;
     }
 
-    console.log("[testimonials] DB insert success");
+    devlog("log", "[testimonials] DB insert success");
     return data as TestimonialImageRow;
   } catch (error) {
-    console.error("[testimonials] DB insert failed", error);
+    devlog("error", "[testimonials] DB insert failed", error);
     const { error: removeError } = await supabase.storage.from(BUCKET).remove([storagePath]);
     if (removeError) {
-      console.warn("[testimonials] Storage cleanup failed", removeError);
+      devlog("warn", "[testimonials] Storage cleanup failed", removeError);
     }
     throw new Error(error instanceof Error ? error.message : "Failed to save image record.");
   }
@@ -113,7 +97,7 @@ export async function replaceTestimonialImage(id: string, file: File): Promise<T
     .single();
 
   if (fetchError) {
-    console.error("[testimonials] FETCH ERROR for replace — full object:", fetchError);
+    devlog("error", "[testimonials] FETCH ERROR for replace — full object:", fetchError);
     throw new Error(fetchError.message || "Image not found.");
   }
 
@@ -124,7 +108,7 @@ export async function replaceTestimonialImage(id: string, file: File): Promise<T
     .upload(newStoragePath, file, { cacheControl: "3600", upsert: false });
 
   if (uploadError) {
-    console.error("[testimonials] STORAGE UPLOAD ERROR (replace) — full object:", uploadError);
+    devlog("error", "[testimonials] STORAGE UPLOAD ERROR (replace) — full object:", uploadError);
     throw new Error(uploadError.message || "Upload failed.");
   }
 
@@ -148,17 +132,17 @@ export async function replaceTestimonialImage(id: string, file: File): Promise<T
         .from(BUCKET)
         .remove([existing.storage_path]);
       if (removeError) {
-        console.warn("[testimonials] Old storage cleanup failed", removeError);
+        devlog("warn", "[testimonials] Old storage cleanup failed", removeError);
       }
     }
 
-    console.log("[testimonials] Replace success");
+    devlog("log", "[testimonials] Replace success");
     return data as TestimonialImageRow;
   } catch (error) {
-    console.error("[testimonials] Replace failed", error);
+    devlog("error", "[testimonials] Replace failed", error);
     const { error: removeError } = await supabase.storage.from(BUCKET).remove([newStoragePath]);
     if (removeError) {
-      console.warn("[testimonials] Replacement cleanup failed", removeError);
+      devlog("warn", "[testimonials] Replacement cleanup failed", removeError);
     }
     throw new Error(error instanceof Error ? error.message : "Failed to update image record.");
   }
@@ -172,7 +156,7 @@ export async function deleteTestimonialImage(id: string): Promise<void> {
     .single();
 
   if (fetchError) {
-    console.error("[testimonials] FETCH ERROR before delete — full object:", fetchError);
+    devlog("error", "[testimonials] FETCH ERROR before delete — full object:", fetchError);
     throw new Error(fetchError.message || "Image not found.");
   }
 
@@ -182,19 +166,19 @@ export async function deleteTestimonialImage(id: string): Promise<void> {
     .eq("id", id);
 
   if (deleteError) {
-    console.error("[testimonials] DELETE ERROR — full object:", deleteError);
+    devlog("error", "[testimonials] DELETE ERROR — full object:", deleteError);
     throw new Error(deleteError.message || "Failed to delete image record.");
   }
 
   if (row?.storage_path) {
-    console.log("[testimonials] Removing storage file:", row.storage_path);
+    devlog("log", "[testimonials] Removing storage file:", row.storage_path);
     const { error: storageError } = await supabase.storage
       .from(BUCKET)
       .remove([row.storage_path]);
     if (storageError) {
-      console.warn("[testimonials] Storage delete warning", storageError);
+      devlog("warn", "[testimonials] Storage delete warning", storageError);
     }
   }
 
-  console.log("[testimonials] Delete success");
+  devlog("log", "[testimonials] Delete success");
 }

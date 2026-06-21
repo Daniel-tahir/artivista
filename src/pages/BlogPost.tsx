@@ -6,6 +6,7 @@ import {
 import { fetchBlogBySlug, incrementBlogViews } from "@/services/blogs/blog.service";
 import SeoHead from "@/components/SeoHead";
 import SiteLayout from "@/components/layout/SiteLayout";
+import { devlog } from "@/utils/security";
 import type { Blog } from "@/types/content";
 
 const gradientColors = [
@@ -83,7 +84,7 @@ const BlogPost = () => {
 
     fetchBlogBySlug(slug)
       .then((remote) => {
-        console.log("Fetched Blog By Slug:", remote);
+        devlog("log", "Fetched Blog By Slug:", remote);
         if (remote) {
           setPost(remoteToResolved(remote));
           incrementBlogViews(remote.id).catch(() => {});
@@ -92,7 +93,7 @@ const BlogPost = () => {
         }
       })
       .catch((err) => {
-        console.log("Blog Fetch Error:", err);
+        devlog("log", "Blog Fetch Error:", err);
         setPost(null);
       })
       .finally(() => setLoading(false));

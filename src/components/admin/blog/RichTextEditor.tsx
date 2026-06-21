@@ -63,9 +63,20 @@ const RichTextEditor = ({ content, onChange, placeholder = "Start writing..." }:
     </button>
   );
 
+  function isValidUrl(input: string): boolean {
+    try {
+      const parsed = new URL(input);
+      return parsed.protocol === "http:" || parsed.protocol === "https:";
+    } catch {
+      return false;
+    }
+  }
+
   const addImage = () => {
     const url = window.prompt("Enter image URL:");
-    if (url) editor.chain().focus().setImage({ src: url }).run();
+    if (url && isValidUrl(url)) {
+      editor.chain().focus().setImage({ src: url }).run();
+    }
   };
 
   const addLink = () => {
@@ -76,7 +87,9 @@ const RichTextEditor = ({ content, onChange, placeholder = "Start writing..." }:
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
       return;
     }
-    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+    if (isValidUrl(url)) {
+      editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+    }
   };
 
   return (

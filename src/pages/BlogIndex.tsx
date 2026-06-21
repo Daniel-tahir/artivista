@@ -3,12 +3,13 @@ import BlogCard from "@/components/blog/BlogCard";
 import SeoHead from "@/components/SeoHead";
 import { Skeleton } from "@/components/ui/skeleton";
 import SiteLayout from "@/components/layout/SiteLayout";
+import { devlog } from "@/utils/security";
 
 const BlogIndex = () => {
   const { data: remotePosts, isLoading, isError } = useBlogs();
 
-  console.log("Fetched Blogs:", remotePosts);
-  console.log("Blog Fetch Error:", isError);
+  devlog("log", "Fetched Blogs:", remotePosts);
+  devlog("log", "Blog Fetch Error:", isError);
 
   return (
     <SiteLayout>

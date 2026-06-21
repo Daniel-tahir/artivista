@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { devlog } from "@/utils/security";
 import { buildArtworkStoragePath, validateArtworkUploadFile } from "@/utils/uploads/storage-path";
 
 const humanizeUploadError = (errorMessage: string) => {
@@ -41,7 +42,7 @@ export const uploadArtworkFile = async ({
     artworkSlug,
   });
 
-  console.log({
+  devlog("log", {
     bucket: "artworks",
     path,
     categorySlug: normalizedCategorySlug,
@@ -54,7 +55,7 @@ export const uploadArtworkFile = async ({
 
   const { error } = await supabase.storage.from("artworks").upload(path, file, {
     cacheControl: "3600",
-    upsert: true,
+    upsert: false,
     contentType: mimeType,
   });
 

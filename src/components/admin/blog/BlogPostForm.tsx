@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Save, Eye, ArrowLeft, Upload, X,
@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import RichTextEditor from "@/components/admin/blog/RichTextEditor";
 import { uploadBlogImage, deleteBlogImage } from "@/services/blogs/blog-upload.service";
 import type { Blog } from "@/types/content";
+import { sanitizeText, sanitizeHtml } from "@/utils/security";
 
 interface BlogPostFormProps {
   blog?: Blog | null;
@@ -48,6 +49,7 @@ const BlogPostForm = ({ blog, onSave }: BlogPostFormProps) => {
   const [metaDescription, setMetaDescription] = useState(blog?.metaDescription ?? "");
   const [saving, setSaving] = useState(false);
   const [slugEdited, setSlugEdited] = useState(false);
+  const lastSaveRef = useRef(0);
 
   const handleTitleChange = useCallback(
     (val: string) => {
@@ -84,6 +86,10 @@ const BlogPostForm = ({ blog, onSave }: BlogPostFormProps) => {
     .filter(Boolean);
 
   const handleSave = async () => {
+    const now = Date.now();
+    if (now - lastSaveRef.current < 2000) return;
+    lastSaveRef.current = now;
+
     if (!title.trim()) {
       toast.error("Title is required");
       return;
@@ -96,16 +102,16 @@ const BlogPostForm = ({ blog, onSave }: BlogPostFormProps) => {
     setSaving(true);
     try {
       await onSave({
-        title: title.trim(),
+        title: sanitizeText(title),
         slug: slug.trim(),
-        excerpt: excerpt.trim(),
-        content,
+        excerpt: sanitizeText(excerpt),
+        content: sanitizeHtml(content),
         coverImage,
         published,
         scheduledAt,
         featured,
-        metaTitle: metaTitle || title,
-        metaDescription: metaDescription || excerpt.slice(0, 160),
+        metaTitle: sanitizeText(metaTitle || title),
+        metaDescription: sanitizeText(metaDescription || excerpt.slice(0, 160)),
         tags,
       });
       toast.success(isEdit ? "Blog updated" : "Blog created");

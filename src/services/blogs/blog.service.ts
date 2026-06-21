@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Blog } from "@/types/content";
 import type { Database } from "@/types/database";
+import { sanitizeHtml, sanitizeText, clampLength, MAX_INPUT_LENGTHS, devlog } from "@/utils/security";
 
 type BlogRow = Database["public"]["Tables"]["blogs"]["Row"];
 
@@ -37,6 +38,9 @@ const BLOG_SELECT = `
 `;
 
 export async function publishDueBlogs(): Promise<number> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return 0;
+
   const now = new Date().toISOString();
   const { data, error } = await supabase
     .from("blogs")
@@ -159,16 +163,16 @@ export const createBlog = async (
   const { tags, ...rowData } = blog;
 
   const insertData: Database["public"]["Tables"]["blogs"]["Insert"] = {
-    title: rowData.title,
+    title: clampLength(sanitizeText(rowData.title), MAX_INPUT_LENGTHS.TITLE),
     slug: rowData.slug,
-    excerpt: rowData.excerpt || null,
-    content: rowData.content || null,
+    excerpt: rowData.excerpt ? clampLength(sanitizeText(rowData.excerpt), MAX_INPUT_LENGTHS.EXCERPT) : null,
+    content: rowData.content ? sanitizeHtml(rowData.content) : null,
     cover_image: rowData.coverImage || null,
     author_id: rowData.authorId || null,
     published: rowData.scheduledAt ? false : rowData.published,
     featured: rowData.featured ?? false,
-    meta_title: rowData.metaTitle || rowData.title,
-    meta_description: rowData.metaDescription || rowData.excerpt?.slice(0, 160) || null,
+    meta_title: rowData.metaTitle ? clampLength(sanitizeText(rowData.metaTitle), MAX_INPUT_LENGTHS.META_TITLE) : clampLength(sanitizeText(rowData.title), MAX_INPUT_LENGTHS.META_TITLE),
+    meta_description: rowData.metaDescription ? clampLength(sanitizeText(rowData.metaDescription), MAX_INPUT_LENGTHS.META_DESCRIPTION) : (rowData.excerpt ? clampLength(sanitizeText(rowData.excerpt), MAX_INPUT_LENGTHS.META_DESCRIPTION) : null),
     published_at: rowData.scheduledAt ? null : rowData.published ? (new Date()).toISOString() : null,
     scheduled_at: toUTC(rowData.scheduledAt) || null,
   };
@@ -206,16 +210,16 @@ export const updateBlog = async (
   const { tags, ...rowData } = blog;
 
   const updateData: Database["public"]["Tables"]["blogs"]["Update"] = {};
-  if (rowData.title !== undefined) updateData.title = rowData.title;
+  if (rowData.title !== undefined) updateData.title = clampLength(sanitizeText(rowData.title), MAX_INPUT_LENGTHS.TITLE);
   if (rowData.slug !== undefined) updateData.slug = rowData.slug;
-  if (rowData.excerpt !== undefined) updateData.excerpt = rowData.excerpt || null;
-  if (rowData.content !== undefined) updateData.content = rowData.content || null;
+  if (rowData.excerpt !== undefined) updateData.excerpt = rowData.excerpt ? clampLength(sanitizeText(rowData.excerpt), MAX_INPUT_LENGTHS.EXCERPT) : null;
+  if (rowData.content !== undefined) updateData.content = rowData.content ? sanitizeHtml(rowData.content) : null;
   if (rowData.coverImage !== undefined) updateData.cover_image = rowData.coverImage || null;
   if (rowData.authorId !== undefined) updateData.author_id = rowData.authorId || null;
   if (rowData.published !== undefined) updateData.published = rowData.published;
   if (rowData.featured !== undefined) updateData.featured = rowData.featured;
-  if (rowData.metaTitle !== undefined) updateData.meta_title = rowData.metaTitle || null;
-  if (rowData.metaDescription !== undefined) updateData.meta_description = rowData.metaDescription || null;
+  if (rowData.metaTitle !== undefined) updateData.meta_title = rowData.metaTitle ? clampLength(sanitizeText(rowData.metaTitle), MAX_INPUT_LENGTHS.META_TITLE) : null;
+  if (rowData.metaDescription !== undefined) updateData.meta_description = rowData.metaDescription ? clampLength(sanitizeText(rowData.metaDescription), MAX_INPUT_LENGTHS.META_DESCRIPTION) : null;
   if (rowData.publishedAt !== undefined) updateData.published_at = rowData.publishedAt || null;
   if (rowData.scheduledAt !== undefined) updateData.scheduled_at = toUTC(rowData.scheduledAt) || null;
 

@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-
-const AUTH_KEY = "artivistaa_admin_auth";
+import { supabase } from "@/integrations/supabase/client";
 
 const AdminSessionWatcher = () => {
   const location = useLocation();
@@ -19,7 +18,7 @@ const AdminSessionWatcher = () => {
     const curr = location.pathname;
 
     if (prev?.startsWith("/admin") && !curr.startsWith("/admin")) {
-      localStorage.removeItem(AUTH_KEY);
+      supabase.auth.signOut();
     }
 
     prevPathRef.current = curr;

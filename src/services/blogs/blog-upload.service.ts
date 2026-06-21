@@ -1,8 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
+import { validateUploadFile, inferSafeExtension } from "@/utils/security";
 
 const BLOG_BUCKET = "blogs-images";
-
-const SAFE_TYPES = new Set(["image/png", "image/jpeg", "image/webp", "image/gif"]);
 
 function slugify(value: string) {
   return value
@@ -16,26 +15,9 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-function inferExtension(file: File): string {
-  const fromName = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "");
-  if (fromName && ["png", "jpg", "jpeg", "webp", "gif"].includes(fromName)) {
-    return fromName === "jpg" ? "jpeg" : fromName;
-  }
-  if (file.type === "image/png") return "png";
-  if (file.type === "image/jpeg") return "jpeg";
-  if (file.type === "image/webp") return "webp";
-  if (file.type === "image/gif") return "gif";
-  return "";
-}
-
 function validateFile(file: File) {
-  if (!(file instanceof File) || !file.name.trim() || file.size <= 0) {
-    throw new Error("Invalid file.");
-  }
-  if (!SAFE_TYPES.has(file.type)) {
-    throw new Error("Unsupported file type. Use PNG, JPEG, WebP, or GIF.");
-  }
-  const ext = inferExtension(file);
+  validateUploadFile(file);
+  const ext = inferSafeExtension(file);
   if (!ext) throw new Error("Could not determine file extension.");
   return ext;
 }
@@ -53,7 +35,7 @@ export async function uploadBlogImage(
 
   const { error } = await supabase.storage
     .from(BLOG_BUCKET)
-    .upload(path, file, { cacheControl: "3600", upsert: true });
+    .upload(path, file, { cacheControl: "3600", upsert: false });
 
   if (error) throw new Error(error.message || "Upload failed.");
 
